@@ -1,5 +1,19 @@
 # Agile Management System
 
+## Instruction
+
+1. Clone the repository to your local machine
+2. Open *cmd/Terminal* and `cd` to the repository path (e.g. `cd /Users/your-username/Projects/CZ3002_Agile_Mgmt_System`)
+3. Type `npm install` to install all the `node_modules/` dependencies
+4. Type `meteor` to run the application server
+5. When the *cmd/Terminal* shows the message
+    > => Started proxy.
+    > => Started MongoDB.
+    > => Started your app.
+    > => App running at: http://localhost:3000/
+
+    open [localhost:3000](http://localhost:3000/) to view the application client
+
 ## Note
 - Please read the `Application Structure` section carefully, since Meteor compiles the application from the way we organize it
 - For more specific description of each individual file's functionality, read the documentation at the start of each file
