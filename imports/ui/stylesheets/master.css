@@ -1,0 +1,10 @@
+.page-sidebar {
+  margin-top: 50px;
+}
+
+@media (min-width: 992px) {
+  .page-content-wrapper .page-content {
+    margin-top: 50px;
+    margin-left: 235px;
+  }
+}
