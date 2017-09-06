@@ -2,9 +2,17 @@
   margin-top: 50px;
 }
 
+.page-header.navbar .page-logo .logo-default {
+  height: 50px;
+  margin-left: 20px;
+  margin-top: 0px;
+  padding: 0;
+}
+
 @media (min-width: 992px) {
   .page-content-wrapper .page-content {
     margin-top: 50px;
     margin-left: 235px;
+    min-height: 100vh;
   }
 }
