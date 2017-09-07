@@ -1,0 +1,13 @@
+<template name='notificationItem'>
+  <li>
+    <a href="javascript:;">
+      <span class="time">{{time}}</span>
+      <span class="details">
+        {{#with category}}
+          {{> notificationCat}}
+        {{/with}}
+      </span>
+      {{title}}
+    </a>
+  </li>
+</template>

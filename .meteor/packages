@@ -25,3 +25,6 @@ aldeed:collection2-core
 aldeed:simple-schema
 underscore
 jquery
+twbs:bootstrap
+nahue:simple-line-icons
+ctjp:meteor-bootstrap-switch

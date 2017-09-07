@@ -1,0 +1,14 @@
+<!-- 
+  Author: Vince Dang
+  Define the dropdown menu section of the navigation bar of the master layout.
+  To be refactored into smaller components.
+ -->
+
+
+<template name='navMenu'>
+  <div class="top-menu">
+    <ul class="nav navbar-nav pull-right">
+      {{> notificationNav}} {{> todoNav}} {{> userNav}}
+    </ul>
+  </div>
+</template>

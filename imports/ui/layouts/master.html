@@ -8,43 +8,19 @@
 <template name='master'>
 
   <div class="page-header navbar navbar-fixed-top">
-    <!-- BEGIN HEADER INNER -->
     <div class="page-header-inner ">
-      <!-- BEGIN LOGO -->
       {{> navLogo}}
-      <!-- END LOGO -->
-      <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-      <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span></span>
-                    </a>
-      <!-- END RESPONSIVE MENU TOGGLER -->
-      <!-- BEGIN TOP NAVIGATION MENU -->
-      {{> navMenu}}
-      <!-- END TOP NAVIGATION MENU -->
+      <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"></a>      {{> navMenu}}
     </div>
-    <!-- END HEADER INNER -->
   </div>
-  <!-- END HEADER -->
 
-  <!-- BEGIN HEADER & CONTENT DIVIDER -->
   <div class="clearfix"> </div>
-  <!-- END HEADER & CONTENT DIVIDER -->
-  <!-- BEGIN CONTAINER -->
   <div class="page-container">
-    <!-- BEGIN SIDEBAR -->
     {{> sidebar}}
-    <!-- END SIDEBAR -->
-    <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
-      <!-- BEGIN CONTENT BODY -->
       {{> Template.dynamic template=content}}
-      <!-- END CONTENT BODY -->
     </div>
-    <!-- END CONTENT -->
 
   </div>
-  <!-- END CONTAINER -->
-  <!-- BEGIN FOOTER -->
   {{> footer}}
-  <!-- END FOOTER -->
 </template>
