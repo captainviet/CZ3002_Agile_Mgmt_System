@@ -3,9 +3,7 @@
  * Linked controller for the master layout master.html.
  */
 
-import {
-  Template
-} from "meteor/templating";
+import {Template} from "meteor/templating";
 
 import "../../assets/global/css/components.min.css"
 import "../../assets/global/css/plugins.min.css"
