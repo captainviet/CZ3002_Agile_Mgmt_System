@@ -22,7 +22,6 @@ kadira:blaze-layout
 reactive-dict
 reywood:publish-composite
 aldeed:collection2-core
-aldeed:simple-schema
 underscore
 jquery
 twbs:bootstrap
