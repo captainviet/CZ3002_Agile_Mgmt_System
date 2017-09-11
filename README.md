@@ -21,6 +21,15 @@
 - **Single-page website** refers to a web application who effectively update its data representation and interfaces without the need to refresh
 - The file `index.js` included in almost every directories serves as the entry point for importing all modules from the enclosing folder (or `import /path` is equivalent to `import /path/index.js`)
 
+## Code Style
+
+- Naming
+  - Use **dash-separated** for folder and file names e.g. [`app-components/`](https://github.com/captainviet/CZ3002_Agile_Mgmt_System/tree/master/imports/api/app-components), [`user-menu.js`](https://github.com/captainviet/CZ3002_Agile_Mgmt_System/tree/master/imports/api/app-components/user-menu.js)
+  - Use **dash-seperated** for HTML attributes and CSS classes as usual e.g. `nav nav-bar`, `.container`
+  - Use **camel case** for template names and variable names e.g. `template name='userNav'`, `notificationItem`
+  - Use **upper-camel case** for modular utility functions and constants e.g. [`export const UserMenu`](https://github.com/captainviet/CZ3002_Agile_Mgmt_System/tree/master/imports/api/app-components/user-menu.js)
+-
+
 ## Application Structure
 
 - `.meteor/` is where all meteor-related data are stored, it is highly recommended not to touch the folder

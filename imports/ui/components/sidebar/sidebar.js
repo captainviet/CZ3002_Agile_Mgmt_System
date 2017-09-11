@@ -1,6 +1,6 @@
 import {Template} from 'meteor/templating'
 
-import {SidebarMenu} from '../../../api/appComponents/sidebarMenu'
+import {SidebarMenu} from '../../../api/app-components/sidebar-menu'
 import './sidebar-section'
 import './sidebar.html'
 

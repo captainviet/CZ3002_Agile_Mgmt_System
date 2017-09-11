@@ -1,6 +1,6 @@
 import {Template} from 'meteor/templating'
 
-import {UserMenu} from '../../../../api/appComponents/userMenu'
+import {UserMenu} from '../../../../api/app-components/user-menu'
 import './user-item'
 import './user-nav.html'
 
