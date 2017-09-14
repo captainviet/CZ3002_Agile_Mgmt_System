@@ -1,4 +1,5 @@
 import './todo'
 import './notification'
 import './user'
+import './course'
 import './nav-menu.html'

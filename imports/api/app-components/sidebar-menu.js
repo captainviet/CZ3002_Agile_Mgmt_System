@@ -5,31 +5,33 @@ export const SidebarMenu = {
   },
   menus: [
     {
-      sidebarHeader: "Features",
+      sidebarHeader: "Task Menu",
       sidebarItems: [
         {
           icon: "adn",
-          title: "UI Features"
+          title: "Your Task",
+          link: "/your-task"
         }, {
           icon: "android",
-          title: "Components"
+          title: "Team Progress",
+          link: "/team-task"
         }, {
           icon: "edit",
-          title: "Form stuffs"
+          title: "View #3"
         }
       ]
     }, {
-      sidebarHeader: "Layouts",
+      sidebarHeader: "Header #2",
       sidebarItems: [
         {
           icon: "archive",
-          title: "Page Layouts"
+          title: "Menu #1"
         }, {
           icon: "align-left",
-          title: "Sidebar Layouts"
+          title: "Menu #2"
         }, {
           icon: "at",
-          title: "Custom Layouts"
+          title: "Menu #3"
         }
       ]
     }

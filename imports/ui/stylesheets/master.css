@@ -2,6 +2,12 @@
   overflow-y: auto;
 }
 
+.logo {
+  font-size: 20px;
+  color: white;
+  margin: 15px 0 15px 0;
+}
+
 .page-sidebar {
   margin-top: 50px;
 }
