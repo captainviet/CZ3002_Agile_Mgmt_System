@@ -14,3 +14,18 @@ Template
       return UserMenu.logout
     }
   })
+
+Template
+  .userNav
+  .events({
+    'click #logout' (e) {
+      e.preventDefault()
+      Meteor.logout((e) => {
+        if (e) {
+          console.log(e.reason)
+        } else {
+          FlowRouter.go('public.login')
+        }
+      })
+    }
+  })

@@ -7,35 +7,70 @@ import {FlowRouter} from 'meteor/kadira:flow-router'
 import {BlazeLayout} from 'meteor/kadira:blaze-layout'
 
 import '../../ui/layouts/master'
+import '../../ui/layouts/login'
+import '../../ui/layouts/register'
 import '../../ui/pages/dummy'
 import '../../ui/pages/not-dummy'
 import '../../ui/pages/personal-task'
 import '../../ui/pages/team-task'
 import '../../ui/pages/task-details'
 
-FlowRouter.route('/', {
-  name: 'App.homePage',
+FlowRouter.notFound = {
+  action: () => {
+    FlowRouter.go('public.login')
+  }
+}
+
+const publicRoutes = FlowRouter.group({prefix: '/public', name: 'public'})
+
+publicRoutes.route('/login', {
+  name: 'public.login',
+  action() {
+    BlazeLayout.render('login')
+  }
+})
+
+publicRoutes.route('/register', {
+  name: 'public.register',
+  action() {
+    BlazeLayout.render('register')
+  }
+})
+
+const userRoutes = FlowRouter.group({
+  prefix: '/user',
+  name: 'user',
+  triggersEnter: [(context, redirect) => {
+      if (!Meteor.user() || Meteor.loggingIn()) {
+        FlowRouter.go('public.login')
+      }
+    }
+  ]
+})
+
+userRoutes.route('/', {
+  name: 'user.home',
   action() {
     BlazeLayout.render('master', {content: 'dummy'})
   }
 })
 
-FlowRouter.route('/random', {
-  name: 'Tasks.show',
+userRoutes.route('/random', {
+  name: 'user.random',
   action() {
     BlazeLayout.render('master', {content: 'notDummy'})
   }
 })
 
-FlowRouter.route('/your-task', {
-  name: 'Tasks.self',
+userRoutes.route('/your-task', {
+  name: 'user.self',
   action() {
     BlazeLayout.render('master', {content: 'personalTask'})
   }
 })
 
-FlowRouter.route('/team-task', {
-  name: 'Tasks.team',
+userRoutes.route('/team-task', {
+  name: 'user.team',
   action() {
     BlazeLayout.render('master', {content: 'teamTask'})
   }

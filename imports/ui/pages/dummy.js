@@ -14,3 +14,12 @@ Template
       return Session.get('log')
     }
   })
+
+Template
+  .dummy
+  .events({
+    'click #dummy' (e) {
+      e.preventDefault()
+      FlowRouter.go('user.random')
+    }
+  })

@@ -10,11 +10,11 @@ export const SidebarMenu = {
         {
           icon: "adn",
           title: "Your Task",
-          link: "/your-task"
+          route: "user.self"
         }, {
           icon: "android",
           title: "Team Progress",
-          link: "/team-task"
+          route: "user.team"
         }, {
           icon: "edit",
           title: "View #3"

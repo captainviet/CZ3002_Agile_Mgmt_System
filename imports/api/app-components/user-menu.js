@@ -2,17 +2,21 @@ export const UserMenu = {
   menus: [
     {
       title: "My Profile",
-      icon: "user"
+      icon: "user",
+      id: "profile"
     }, {
       title: "My Calendar",
-      icon: "calendar"
+      icon: "calendar",
+      id: "calendar"
     }, {
       title: "My Tasks",
-      icon: "rocket"
+      icon: "rocket",
+      id: "task"
     }
   ],
   logout: {
     title: "Log Out",
-    icon: "key"
+    icon: "key",
+    id: "logout"
   }
 }
