@@ -7,6 +7,9 @@ import './user-nav.html'
 Template
   .userNav
   .helpers({
+    username() {
+      return Meteor.user().emails[0].address
+    },
     menus() {
       return UserMenu.menus
     },
