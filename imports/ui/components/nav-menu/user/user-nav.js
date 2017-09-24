@@ -8,7 +8,10 @@ Template
   .userNav
   .helpers({
     username() {
-      return Meteor.user().emails[0].address
+      return Meteor
+        .user()
+        .emails[0]
+        .address
     },
     menus() {
       return UserMenu.menus
@@ -21,6 +24,10 @@ Template
 Template
   .userNav
   .events({
+    'click #profile' (e) {
+      e.preventDefault()
+      FlowRouter.go('user.profile')
+    },
     'click #logout' (e) {
       e.preventDefault()
       Meteor.logout((e) => {

@@ -1,7 +1,7 @@
 import {Template} from 'meteor/templating'
 import {ReactiveDict} from 'meteor/reactive-dict'
 
-import {EmailValidator} from '../../utils/email-validator'
+import {InputValidator} from '../../utils/input-validator'
 
 import "../../assets/global/css/components.min.css"
 import "../../assets/global/css/plugins.min.css"
@@ -12,11 +12,15 @@ import "../../assets/pages/css/login.min.css"
 
 import './login.html'
 
-Template.login.onCreated(function () {
+Template
+  .login
+  .onCreated(function () {
     this.state = new ReactiveDict()
   })
 
-Template.login.helpers({
+Template
+  .login
+  .helpers({
     error() {
       const instance = Template.instance()
       return instance
@@ -31,17 +35,19 @@ Template
     'change #username' (e) {
       const email = $('#username').val()
       let message
-      if (!EmailValidator.validate(email)) {
+      if (!InputValidator.isValidEmail(email)) {
         message = 'Invalid Email'
       }
       console.log(message)
       const instance = Template.instance()
-      instance.state.set('error-message', message)
+      instance
+        .state
+        .set('error-message', message)
     },
     'click #login' (e) {
       e.preventDefault()
       const email = $('#username').val()
-      if (!EmailValidator.validate(email)) {
+      if (!InputValidator.isValidEmail(email)) {
         return
       }
       const password = $('#password').val()
@@ -49,7 +55,9 @@ Template
       const instance = Template.instance()
       Meteor.loginWithPassword(email, password, (e) => {
         if (e) {
-          instance.state.set('error-message', e.reason)
+          instance
+            .state
+            .set('error-message', e.reason)
           console.log(e.reason)
         } else {
           FlowRouter.go('user.home')

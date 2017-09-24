@@ -5,3 +5,4 @@
 
 import '../../api/tasks'
 import '../../api/notifications'
+import '../../api/users'

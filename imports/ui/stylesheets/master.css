@@ -12,6 +12,14 @@
   margin-top: 50px;
 }
 
+.page-footer {
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  background-color: #2b3643;
+}
+
 .page-header.navbar .page-logo .logo-default {
   height: 50px;
   margin-left: 20px;

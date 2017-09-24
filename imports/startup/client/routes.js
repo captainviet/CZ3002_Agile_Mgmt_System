@@ -14,6 +14,7 @@ import '../../ui/pages/not-dummy'
 import '../../ui/pages/personal-task'
 import '../../ui/pages/team-task'
 import '../../ui/pages/task-details'
+import '../../ui/pages/user-profile'
 
 FlowRouter.notFound = {
   action: () => {
@@ -41,7 +42,7 @@ const userRoutes = FlowRouter.group({
   prefix: '/user',
   name: 'user',
   triggersEnter: [(context, redirect) => {
-      if (!Meteor.user() || Meteor.loggingIn()) {
+      if (!Meteor.user() && !Meteor.loggingIn()) {
         FlowRouter.go('public.login')
       }
     }
@@ -73,5 +74,12 @@ userRoutes.route('/team-task', {
   name: 'user.team',
   action() {
     BlazeLayout.render('master', {content: 'teamTask'})
+  }
+})
+
+userRoutes.route('/profile', {
+  name: 'user.profile',
+  action() {
+    BlazeLayout.render('master', {content: 'userProfile'})
   }
 })
