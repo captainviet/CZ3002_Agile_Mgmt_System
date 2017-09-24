@@ -30,6 +30,17 @@
   - Use **upper-camel case** for modular utility functions and constants e.g. [`export const UserMenu`](https://github.com/captainviet/CZ3002_Agile_Mgmt_System/tree/master/imports/api/app-components/user-menu.js)
 -
 
+## [Application Routes](https://github.com/captainviet/CZ3002_Agile_Mgmt_System/tree/master/imports/startup/client/routes.js)
+
+- `public/`: common prefixes for all public routes
+  - [`public/register/`](http://localhost:3000/public/register): for admin purpose, register new user with email and
+  password
+  - [`public/login/`](http://localhost:3000/public/login): as its name suggested, this route is for logging in
+- `user/`: common prefixes for all private routes
+  - `user/your-task/`: route to view your assigned task
+  - `user/team-task/`: route to view overall team task
+  - `user/profile/`: route to view and edit personal profile
+
 ## Application Structure
 
 - `.meteor/` is where all meteor-related data are stored, it is highly recommended not to touch the folder
