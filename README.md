@@ -63,3 +63,93 @@
   - `import/assets` is where the assets for the *Metronic* theme are stored
 - `.gitignore` lists the files or directories that are excluded from syncing with git (currently we're excluding `node_modules/` folders since it's filled with `npm` packages which are redundant to store on GitHub)
 - `package.json` describes the project as a node module, with all the dependencies as stored in `node_modules/` (to install these dependencies, simply type `npm install` in either the *Terminal (Mac)* or *PowerShell (Wins)*)
+
+## [Permission](https://docs.google.com/document/d/1pO929XxHNXCkNx-rOXKI19o6RNwLjJwXt3wk9LHklO8/edit)
+
+- **NOTES**:
+  - an user has permission to do certain actions doesn't mean that he/she can do so globally, but rather *subjected to further filtering by their userIds*
+  - `admin` permission denotes the role of an admin, used to determine routing between `users` route and `admin` route
+
+- Global (*which all users have permission*)
+  - `users.self`: view/edit own's profile data
+  - `courses.view`: view course description
+  - `groups.view`: view group description
+  - `teams.view`: view team description
+  - `tasks.view`: view task description
+- Users
+  - `users.create`: create a new user
+  - `users.list`: list all users
+  - `users.permission`: view/edit users' permissions
+  - `users.delete`: delete an user
+- Courses
+  - `courses.create`: create a new course
+  - `courses.list`: list all courses
+  - `courses.edit`: edit course description
+  - `courses.delete`: delete a course
+- Groups
+  - `groups.create`: create a new group
+  - `groups.list`: list all groups in a course
+  - `groups.edit`: edit group description
+  - `groups.delete`: delete a group
+- Teams
+  - `teams.create`: create a new team
+  - `teams.list`: list all teams in a group
+  - `teams.edit`: edit team description
+  - `teams.delete`: delete a team
+- Tasks
+  - `tasks.create`: create a new task
+  - `tasks.list`: list all tasks in a team
+  - `tasks.assign`: assign the task to a team member
+  - `tasks.update`: update the progress of the task
+  - `tasks.markCompleted`: mark the task as reviewed and completed
+  - `tasks.edit`: edit task description
+  - `tasks.delete`: delete a task
+
+## [Roles](https://github.com/captainviet/CZ3002_Agile_Mgmt_System/blob/master/imports/api/permissions/permissions.js)
+
+```
+export const Permissions = {
+  admin: [
+    'admin',
+    'users.create',
+    'users.list',
+    'users.read',
+    'users.permission',
+    'users.delete',
+    'courses.create',
+    'courses.list',
+    'courses.edit',
+    'courses.delete',
+    'groups.create',
+    'groups.list',
+    'groups.edit',
+    'groups.delete',
+    'teams.create',
+    'teams.list',
+    'teams.edit',
+    'teams.delete',
+  ],
+  coordinator: [
+    'courses.edit',
+    'groups.list',
+    'groups.edit',
+    'teams.list',
+    'teams.edit',
+    'tasks.list',
+  ],
+  teamLeader: [
+    'tasks.create',
+    'tasks.list',
+    'tasks.assign',
+    'tasks.update',
+    'tasks.markCompleted',
+    'tasks.edit',
+    'tasks.delete',
+  ],
+  teamMember: [
+    'tasks.list',
+    'tasks.update',
+    'tasks.edit'
+  ]
+}
+```
