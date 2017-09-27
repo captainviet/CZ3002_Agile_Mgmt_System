@@ -1,5 +1,25 @@
 import { check } from 'meteor/check'
 
+Meteor.startup(() => {
+  if (typeof Meteor.users.findOne() === 'undefined') {
+    const users = [
+      {
+        email: "xuanvu@gmail.com",
+        password: "123123",
+      }, {
+        email: "desmond@gmail.com",
+        password: "321321",
+      }, {
+        email: "althea@gmail.com",
+        password: "123123",
+      }
+    ]
+    users.forEach((user) => {
+      Accounts.createUser(user)
+    })
+  }
+})
+
 Meteor.publish(null, function() {
   const selector = {
     _id: this.userId
