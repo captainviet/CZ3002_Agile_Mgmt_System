@@ -1,6 +1,7 @@
 import { Courses } from '../../api/courses/courses'
 import { Groups } from '../../api/groups/groups'
 import { Teams } from '../../api/teams/teams'
+import { Permissions } from '../../api/permissions/permissions'
 
 Meteor.startup(() => {
   // initialize Users
@@ -20,6 +21,8 @@ Meteor.startup(() => {
     users.forEach((user) => {
       Accounts.createUser(user)
     })
+    const vinceId = Meteor.users.findOne({'emails.0.address': 'xuanvu@gmail.com'})
+    Roles.addUsersToRoles(vinceId, Permissions.admin, Roles.GLOBAL_GROUP)
   }
 
   // initialize Courses
