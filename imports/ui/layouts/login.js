@@ -48,7 +48,7 @@ Template.login.events({
         instance.state.set('error-message', e.reason)
         console.log(e.reason)
       } else {
-        Session.set('is-admin', Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP))
+        Session.setPersistent('is-admin', Roles.userIsInRole(Meteor.userId(), ['admin'], Roles.GLOBAL_GROUP))
         FlowRouter.go('user.home')
       }
     })

@@ -1,3 +1,12 @@
+body {
+  font-family: "Open Sans", sans-serif
+}
+
+.page-bar .page-breadcrumb li a,
+.page-bar .page-breadcrumb li span {
+  font-size: 2vw;
+}
+
 .scroller {
   overflow-y: auto;
 }
