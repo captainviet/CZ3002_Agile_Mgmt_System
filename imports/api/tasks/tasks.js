@@ -8,7 +8,11 @@ import {Mongo} from 'meteor/mongo'
 export const Tasks = new Mongo.Collection('tasks')
 
 Tasks.publicFields = {
-  title: 1,
-  progress: 1,
-  label: 1
+  text: 1,
+  start_date: 1,
+  end_date: 1,
+  parent: 1,
+  priority: 1,
+  id: 1,
+  duration: 1
 }
