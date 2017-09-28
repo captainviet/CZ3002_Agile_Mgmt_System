@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating'
 import { ReactiveDict } from 'meteor/reactive-dict'
 
-import { InputValidator } from '../../utils/input-validator'
+import { InputValidator } from '../../../utils/input-validator'
 
 import './user-profile.html'
 
@@ -54,27 +54,26 @@ Template.userProfile.events({
     const instance = Template.instance()
     instance.state.set('pi-error', message)
   },
-  'submit #personal-info-submit'(e) {
+  'click #personal-info-submit'(e) {
     e.preventDefault()
     const phone = $('#phone').val()
     let message
     let success
+    const instance = Template.instance()
     if (phone && !InputValidator.isValidPhone(phone)) {
       message = 'Invalid Phone Number'
-      return false
     } else {
+      const name = $('#name').val()
+      console.log(phone + "-" + name)
       message = 'Personal Info Changed Successfully'
       success = true
+
+      Meteor.call('users.updatePersonalInfo', Meteor.userId(), name, phone)
+      $('#phone').val('')
+      $('#name').val('')
     }
-    const instance = Template.instance()
     instance.state.set('pi-error', message)
     instance.state.set('pi-success', success)
-    const name = $('#name').val()
-    console.log(phone + "-" + name)
-
-    Meteor.call('users.updatePersonalInfo', Meteor.userId(), name, phone)
-    $('#phone').val('')
-    $('#name').val('')
   },
   'click #pw-submit'(e) {
     e.preventDefault()
@@ -84,7 +83,7 @@ Template.userProfile.events({
     }
     const pwNew = $('#pw-new').val()
     const pwVerify = $('#pw-verify').val()
-    let message
+    let message = 'New Password Does Not Match'
     let success
     const instance = Template.instance()
     if (pwNew === pwVerify) {
@@ -98,14 +97,12 @@ Template.userProfile.events({
         instance.state.set('pw-error', message)
         instance.state.set('pw-success', success)
       })
-    } else {
-      message = 'New Password Does Not Match'
+      $('#pw-current').val('')
+      $('#pw-new').val('')
+      $('#pw-verify').val('')
     }
     instance.state.set('pw-error', message)
     instance.state.set('pw-success', success)
-    $('#pw-current').val('')
-    $('#pw-new').val('')
-    $('#pw-verify').val('')
   },
   'click #np-submit'(e) {
     e.preventDefault()

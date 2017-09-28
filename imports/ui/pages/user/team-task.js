@@ -1,9 +1,9 @@
-import { Tasks } from '../../api/tasks/tasks'
-import { Links } from '../../api/links/links'
+import { Tasks } from '../../../api/tasks/tasks'
+import { Links } from '../../../api/links/links'
 
 import './team-task.html'
-import '../stylesheets/gantt.css'
-import '../stylesheets/team-task.css'
+import '../../stylesheets/gantt.css'
+import '../../stylesheets/team-task.css'
 
 Template.teamTask.onCreated(() => {
   Meteor.subscribe('tasks')
