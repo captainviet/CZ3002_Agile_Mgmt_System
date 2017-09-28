@@ -1,22 +1,18 @@
-import {Tasks} from '../../api/tasks/tasks'
-import {Links} from '../../api/links/links'
+import { Tasks } from '../../api/tasks/tasks'
+import { Links } from '../../api/links/links'
 
 import './team-task.html'
 import '../stylesheets/gantt.css'
 import '../stylesheets/team-task.css'
 
-Template
-  .teamTask
-  .onCreated(() => {
-    Meteor.subscribe('tasks')
-    Meteor.subscribe('links')
-  })
+Template.teamTask.onCreated(() => {
+  Meteor.subscribe('tasks')
+  Meteor.subscribe('links')
+})
 
 Template.teamTask.rendered = function () {
   var daysStyle = function (date) {
-    var dateToStr = gantt
-      .date
-      .date_to_str("%D");
+    var dateToStr = gantt.date.date_to_str("%D");
     if (dateToStr(date) == "Sun" || dateToStr(date) == "Sat") {
       return "weekend";
     }
@@ -103,18 +99,12 @@ Template.teamTask.rendered = function () {
     }
   ];
   gantt.attachEvent("onLightboxButton", function (button_id, node, e) {
-    var id = gantt
-      .getState()
-      .lightbox;
+    var id = gantt.getState().lightbox;
     if (button_id == "completed_button") {
-      gantt
-        .getTask(id)
-        .progress = 1;
+      gantt.getTask(id).progress = 1;
       //To send sms
     } else if (button_id == "reviewed_button") {
-      gantt
-        .getTask(id)
-        .progress = 2;
+      gantt.getTask(id).progress = 2;
     }
     gantt.updateTask(id);
     gantt.hideLightbox();
@@ -122,34 +112,28 @@ Template.teamTask.rendered = function () {
   gantt.locale.labels.section_template = "Details";
 
   // Init dhtmlxGantt data adapter.
-  gantt.meteor({tasks: Tasks, links: Links});
+  gantt.meteor({ tasks: Tasks, links: Links });
 }
 
-Template
-  .teamTask
-  .events({
-    'focus #date-start': function (e) {
-      e.preventDefault()
-      var dateStart = $('#date-start')
-      dateStart.bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', time: false})
-    },
-    'focus #date-end': function (e) {
-      e.preventDefault()
-      var dateEnd = $('#date-end')
-      dateEnd.bootstrapMaterialDatePicker({format: 'YYYY-MM-DD', time: false})
-    },
-    'change #date-start': function (e, template) {
-      var dateStart = $('[name="date-start"]')
-        .val()
-        .split("-")
-      gantt.config.start_date = new Date(dateStart[0], dateStart[1] - 1, dateStart[2])
-      gantt.render()
-    },
-    'change #date-end': function (e, template) {
-      var dateEnd = $('[name="date-end"]')
-        .val()
-        .split("-")
-      gantt.config.end_date = new Date(dateEnd[0], dateEnd[1] - 1, dateEnd[2])
-      gantt.render()
-    }
-  })
+Template.teamTask.events({
+  'focus #date-start': function (e) {
+    e.preventDefault()
+    var dateStart = $('#date-start')
+    dateStart.bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD', time: false })
+  },
+  'focus #date-end': function (e) {
+    e.preventDefault()
+    var dateEnd = $('#date-end')
+    dateEnd.bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD', time: false })
+  },
+  'change #date-start': function (e, template) {
+    var dateStart = $('[name="date-start"]').val().split("-")
+    gantt.config.start_date = new Date(dateStart[0], dateStart[1] - 1, dateStart[2])
+    gantt.render()
+  },
+  'change #date-end': function (e, template) {
+    var dateEnd = $('[name="date-end"]').val().split("-")
+    gantt.config.end_date = new Date(dateEnd[0], dateEnd[1] - 1, dateEnd[2])
+    gantt.render()
+  }
+})
