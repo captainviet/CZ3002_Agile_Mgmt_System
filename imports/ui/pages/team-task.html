@@ -1,7 +1,26 @@
 <template name='teamTask'>
-  <div class='page-content'>
-    <h1>
-      Here goes the team task view
-    </h1>
+  <div class='page-content gantt'>
+    <div class="container-fluid">
+      <div class="row" style="margin-bottom: 20px">
+        <div class="col-md-12">
+          <form class="form-inline pull-right">
+            <div class="form-group">
+              <label class="sr-only" for="exampleInputEmail3">Start Date</label>
+              <input type="text" class="form-control" placeholder="Start Date" name="date-start" id="date-start">
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="exampleInputPassword3">End Date</label>
+              <input type="text" class="form-control" placeholder="End Date" name="date-end" id="date-end">
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="well">
+        <div class="row">
+          <div id="gantt-here"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
