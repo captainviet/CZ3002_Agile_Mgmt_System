@@ -1,7 +1,58 @@
 <template name='personalTask'>
-  <div class='page-content'>
-    <h1>
-      Here goes the personal task view
-    </h1>
-  </div>
+	<div class='page-content'>
+	<h1>Welcome to your Personal Task Page<i class="fa fa-user"></i></h1>
+  <!-- BEGIN SAMPLE TABLE PORTLET-->
+	<div class="portlet">
+	    <div class="portlet-title">
+	        <div class="caption">
+	            <i class="fa fa-bell-o"></i>List of task </div>
+	        <div class="tools">
+	            <a href="javascript:;" class="collapse"> </a>
+	            <a href="#portlet-config" data-toggle="modal" class="config"> </a>
+	            <a href="javascript:;" class="reload"> </a>
+	            <a href="javascript:;" class="remove"> </a>
+	        </div>
+	    </div>
+	    <div class="portlet-body">
+	        <div class="table-scrollable">
+	            <table class="table table-striped table-bordered table-advance table-hover">
+	                <thead>
+	                    <tr>
+													<th>
+														<i class="fa fa-shopping-cart"></i> #
+													</th>
+	                        <th>
+	                           <i class="fa fa-briefcase"></i> Task Name
+													</th>
+	                        <th class="hidden-xs">
+	                           <i class="fa fa-user"></i> Description
+													</th>
+	                        <th>
+	                           <i class="fa fa-shopping-cart"></i> Reviewer
+													</th>
+	                    </tr>
+	                </thead>
+									<tbody>
+                    {{#each displayAllTasks}}
+								      <tr>
+								          <td class="highlight">
+								              <div class="success"></div>
+								              <a href="javascript:;"> {{counter}} </a>
+								          </td>
+								          <td class="hidden-xs"> {{ task_text }} </td>
+								          <td> {{ task_priority }}% </td>
+								          <td> Bob Marley </td>
+								          <td>
+								              <a href="javascript:;" class="btn btn-outline btn-circle btn-sm purple">
+								                  <i class="fa fa-edit"></i> Edit </a>
+								          </td>
+								      </tr>
+                    {{/each}}
+								  </tbody>
+	            </table>
+	        </div>
+	    </div>
+	</div>
+	<!-- END SAMPLE TABLE PORTLET-->
+	</div>
 </template>
