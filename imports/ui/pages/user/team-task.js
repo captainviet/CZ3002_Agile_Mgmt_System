@@ -1,16 +1,19 @@
 import { Tasks } from '../../../api/tasks/tasks'
 import { Links } from '../../../api/links/links'
+import { Teams } from '../../../api/teams/teams'
 
 import './team-task.html'
 import '../../stylesheets/gantt.css'
 import '../../stylesheets/team-task.css'
 
 Template.teamTask.onCreated(() => {
-  Meteor.subscribe('tasks')
+  console.log(Session.get('active-team'))
+  Meteor.subscribe('tasks', Session.get('active-team'))
   Meteor.subscribe('links')
+  Meteor.subscribe('teams.courseInfos')
 })
 
-Template.teamTask.rendered = function () {
+Template.teamTask.onRendered(function () {
   var daysStyle = function (date) {
     var dateToStr = gantt.date.date_to_str("%D");
     if (dateToStr(date) == "Sun" || dateToStr(date) == "Sat") {
@@ -32,7 +35,7 @@ Template.teamTask.rendered = function () {
   gantt.config.buttons_left = ["dhx_save_btn", "dhx_cancel_btn", "completed_button", "reviewed_button"];
   gantt.locale.labels["completed_button"] = "Completed";
   gantt.locale.labels["reviewed_button"] = "Reviewed";
-  gantt.locale.labels.section_priority = "Assigned";
+  gantt.locale.labels.section_priority = "Assignee";
   gantt.config.subscales = [
     { // {unit:"week", step:1, date:"Week %W"},
       unit: "day",
@@ -57,27 +60,15 @@ Template.teamTask.rendered = function () {
 
   // To populate this with users in the group Key would be the uid Label would be
   // the users name
-  var opts = [
-    {
-      key: "Joel",
-      label: "Joel"
-    }, {
-      key: "Jefferson",
-      label: "Jefferson"
-    }, {
-      key: "Vince",
-      label: "Vince"
-    }, {
-      key: "Chao Jian",
-      label: "Chao Jian"
-    }, {
-      key: "Brandon",
-      label: "Brandon"
-    }, {
-      key: "Desmond",
-      label: "Desmond"
+  const activeTeam = Teams.findOne(Session.get('active-team'))
+  const opts = activeTeam.members.map((userId) => {
+    const user = Meteor.users.findOne(userId)
+    const label = user.name ? user.name : user.emails[0].address
+    return {
+      key: userId,
+      label
     }
-  ];
+  })
   gantt.config.lightbox.sections = [
     {
       name: "description",
@@ -88,7 +79,7 @@ Template.teamTask.rendered = function () {
     }, {
       name: "priority",
       height: 22,
-      map_to: "priority",
+      map_to: "assignee",
       type: "select",
       options: opts
     }, {
@@ -109,11 +100,19 @@ Template.teamTask.rendered = function () {
     gantt.updateTask(id);
     gantt.hideLightbox();
   });
+  gantt.attachEvent('onTaskCreated', (task) => {
+    // block create task api for team member
+    return true
+  })
+  gantt.attachEvent('onAfterTaskAdd', (id, task) => {
+    task.team = Session.get('active-team')
+    return true
+  })
   gantt.locale.labels.section_template = "Details";
 
   // Init dhtmlxGantt data adapter.
   gantt.meteor({ tasks: Tasks, links: Links });
-}
+})
 
 Template.teamTask.events({
   'focus #date-start': function (e) {

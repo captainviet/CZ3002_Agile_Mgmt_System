@@ -2,9 +2,10 @@
   <li class="dropdown">
     <form id="course-selector">
       <div class="form-group">
-        <select class="bs-select form-control">   <option>CZ3002</option>
-          <option>CZ3001</option>
-          <option>CZ2005</option>
+        <select class="bs-select form-control">
+          {{#each teamInfos}}
+          <option value='{{teamId}}'>{{courseCode}}</option>
+          {{/each}}
         </select>
       </div>
     </form>

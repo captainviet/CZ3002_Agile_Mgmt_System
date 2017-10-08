@@ -1,12 +1,11 @@
 import { check } from 'meteor/check'
 
-Meteor.publish(null, function() {
-  const selector = {
-    _id: this.userId
-  }
+Meteor.publish(null, function () {
+  const selector = {}
   const options = {
     fields: {
       notificationPreference: 1,
+      emails: 1,
       name: 1,
       phone: 1
     }
@@ -15,7 +14,7 @@ Meteor.publish(null, function() {
 })
 
 Meteor.methods({
-  'users.updatePersonalInfo' (userId, name, phone) {
+  'users.updatePersonalInfo'(userId, name, phone) {
     check(name, String)
     check(phone, String)
     const query = {
@@ -40,15 +39,15 @@ Meteor.methods({
     }
     console.log(userId + ": Updated phone=" + phone)
   },
-  'users.updateNotificationPreference' (userId, pref) {
+  'users.updateNotificationPreference'(userId, pref) {
     check(pref, String)
     Meteor.users.update({
       _id: userId
     }, {
-      $set: {
-        notificationPreference: pref
-      }
-    })
+        $set: {
+          notificationPreference: pref
+        }
+      })
     console.log(userId + ": Updated pref=" + pref)
   },
 })

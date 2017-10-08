@@ -54,7 +54,7 @@ Template.userProfile.events({
     const instance = Template.instance()
     instance.state.set('pi-error', message)
   },
-  'click #personal-info-submit'(e) {
+  'click #personal-info-submit, submit #personal-info-form'(e) {
     e.preventDefault()
     const phone = $('#phone').val()
     let message
@@ -64,6 +64,9 @@ Template.userProfile.events({
       message = 'Invalid Phone Number'
     } else {
       const name = $('#name').val()
+      if (!name) {
+        return
+      }
       console.log(phone + "-" + name)
       message = 'Personal Info Changed Successfully'
       success = true
@@ -75,7 +78,7 @@ Template.userProfile.events({
     instance.state.set('pi-error', message)
     instance.state.set('pi-success', success)
   },
-  'click #pw-submit'(e) {
+  'click #pw-submit, submit #pw-form'(e) {
     e.preventDefault()
     const pwCurrent = $('#pw-current').val()
     if (!pwCurrent) {
@@ -104,7 +107,7 @@ Template.userProfile.events({
     instance.state.set('pw-error', message)
     instance.state.set('pw-success', success)
   },
-  'click #np-submit'(e) {
+  'click #np-submit, submit #np-form'(e) {
     e.preventDefault()
     const pref = $('input[name="notification-preference"]:checked').val()
     console.log(pref)

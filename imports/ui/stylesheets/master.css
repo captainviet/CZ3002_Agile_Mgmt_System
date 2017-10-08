@@ -43,3 +43,12 @@ body {
     min-height: 90vh;
   }
 }
+
+div.form-group {
+  margin: 0;
+  padding: 10px;
+}
+
+.bs-select {
+  background-color: white;
+}
