@@ -11,8 +11,11 @@ Template.courseNav.helpers({
   teamInfos() {
     const teams = Teams.find().fetch()
     const courses = MyCourses.find().fetch()
-    if (teams.length > 0) {
-      Session.set('active-team', teams[0]._id)
+    const user = Meteor.user()
+    if (!user.session || !user.session.lastTeam) {
+      if (teams.length > 0) {
+        Meteor.call('users.sessionSet.lastTeam', Meteor.userId(), teams[0]._id)
+      }
     }
     return teams.map((team, index) => {
       const course = courses[index]
@@ -21,12 +24,16 @@ Template.courseNav.helpers({
         courseCode: course.name
       }
     })
+  },
+  isLastTeam(teamId) {
+    return teamId === Meteor.user().session.lastTeam ? "selected" : ""
   }
 })
 
 Template.courseNav.events({
   'change form#course-selector'(e, template) {
-    Session.set('active-team', $(e.target).val())
+    Meteor.call('users.sessionSet.lastTeam', Meteor.userId(), $(e.target).val())
+    console.log('rerendering')
     FlowRouter.reload()
   }
 })

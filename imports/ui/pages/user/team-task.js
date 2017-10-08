@@ -6,25 +6,91 @@ import './team-task.html'
 import '../../stylesheets/gantt.css'
 import '../../stylesheets/team-task.css'
 
-Template.teamTask.onCreated(() => {
-  console.log(Session.get('active-team'))
-  Meteor.subscribe('tasks', Session.get('active-team'))
-  Meteor.subscribe('links')
-  Meteor.subscribe('teams.courseInfos')
-})
+const linkHandler = Meteor.subscribe('links')
+const teamHandler = Meteor.subscribe('teams.courseInfos')
+const userHandler = Meteor.subscribe('users')
 
 Template.teamTask.onRendered(function () {
-  var daysStyle = function (date) {
-    var dateToStr = gantt.date.date_to_str("%D");
+  Tracker.autorun(() => {
+    console.log("Running...")
+    if (Meteor.user()) {
+      const lastTeam = new ReactiveVar(Meteor.user().session.lastTeam)
+      console.log(lastTeam.get())
+      const taskHandler = Meteor.subscribe('tasks', lastTeam.get())
+      if (taskHandler.ready() && linkHandler.ready() && teamHandler.ready() && userHandler.ready()) {
+
+        // To populate this with users in the group Key would be the uid Label would be
+        // the users name
+        const activeTeam = Teams.findOne(lastTeam.get())
+        console.log(activeTeam)
+        const opts = activeTeam.members.map((userId) => {
+          const user = Meteor.users.findOne(userId)
+          const label = user.name ? user.name : user.emails[0].address
+          return {
+            key: userId,
+            label
+          }
+        })
+        gantt.config.lightbox.sections = [
+          {
+            name: "description",
+            height: 38,
+            map_to: "text",
+            type: "textarea",
+            focus: true
+          }, {
+            name: "priority",
+            height: 22,
+            map_to: "assignee",
+            type: "select",
+            options: opts
+          }, {
+            name: "time",
+            height: 72,
+            type: "duration",
+            map_to: "auto"
+          }
+        ];
+        gantt.attachEvent("onLightboxButton", function (button_id, node, e) {
+          const id = gantt.getState().lightbox;
+          if (button_id == "completed_button") {
+            gantt.getTask(id).progress = 1;
+            //To send sms
+          } else if (button_id == "reviewed_button") {
+            gantt.getTask(id).progress = 2;
+          }
+          gantt.updateTask(id);
+          gantt.hideLightbox();
+        });
+        gantt.attachEvent('onTaskCreated', (task) => {
+          // block create task api for team member
+          return true
+        })
+        gantt.attachEvent('onAfterTaskAdd', (id, task) => {
+          task.team = activeTeam._id
+          return true
+        })
+        gantt.locale.labels.section_template = "Details";
+
+        // Init dhtmlxGantt data adapter.
+        gantt.meteor({
+          tasks: Tasks,
+          links: Links
+        })
+      }
+    }
+  })
+  const daysStyle = function (date) {
+    const dateToStr = gantt.date.date_to_str("%D");
     if (dateToStr(date) == "Sun" || dateToStr(date) == "Sat") {
       return "weekend";
     }
     return "";
   };
-  var today = new Date();
-  var year = today.getFullYear();
-  var month = today.getMonth();
-  var day = today.getDate();
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const day = today.getDate();
   gantt.config.start_date = new Date(year, month, day);
   gantt.config.end_date = new Date(year, month + 1, day);
   gantt.config.scale_height = 84;
@@ -57,81 +123,27 @@ Template.teamTask.onRendered(function () {
     }
   ];
   gantt.init("gantt-here");
-
-  // To populate this with users in the group Key would be the uid Label would be
-  // the users name
-  const activeTeam = Teams.findOne(Session.get('active-team'))
-  const opts = activeTeam.members.map((userId) => {
-    const user = Meteor.users.findOne(userId)
-    const label = user.name ? user.name : user.emails[0].address
-    return {
-      key: userId,
-      label
-    }
-  })
-  gantt.config.lightbox.sections = [
-    {
-      name: "description",
-      height: 38,
-      map_to: "text",
-      type: "textarea",
-      focus: true
-    }, {
-      name: "priority",
-      height: 22,
-      map_to: "assignee",
-      type: "select",
-      options: opts
-    }, {
-      name: "time",
-      height: 72,
-      type: "duration",
-      map_to: "auto"
-    }
-  ];
-  gantt.attachEvent("onLightboxButton", function (button_id, node, e) {
-    var id = gantt.getState().lightbox;
-    if (button_id == "completed_button") {
-      gantt.getTask(id).progress = 1;
-      //To send sms
-    } else if (button_id == "reviewed_button") {
-      gantt.getTask(id).progress = 2;
-    }
-    gantt.updateTask(id);
-    gantt.hideLightbox();
-  });
-  gantt.attachEvent('onTaskCreated', (task) => {
-    // block create task api for team member
-    return true
-  })
-  gantt.attachEvent('onAfterTaskAdd', (id, task) => {
-    task.team = Session.get('active-team')
-    return true
-  })
-  gantt.locale.labels.section_template = "Details";
-
-  // Init dhtmlxGantt data adapter.
-  gantt.meteor({ tasks: Tasks, links: Links });
 })
+
 
 Template.teamTask.events({
   'focus #date-start': function (e) {
     e.preventDefault()
-    var dateStart = $('#date-start')
+    const dateStart = $('#date-start')
     dateStart.bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD', time: false })
   },
   'focus #date-end': function (e) {
     e.preventDefault()
-    var dateEnd = $('#date-end')
+    const dateEnd = $('#date-end')
     dateEnd.bootstrapMaterialDatePicker({ format: 'YYYY-MM-DD', time: false })
   },
   'change #date-start': function (e, template) {
-    var dateStart = $('[name="date-start"]').val().split("-")
+    const dateStart = $('[name="date-start"]').val().split("-")
     gantt.config.start_date = new Date(dateStart[0], dateStart[1] - 1, dateStart[2])
     gantt.render()
   },
   'change #date-end': function (e, template) {
-    var dateEnd = $('[name="date-end"]').val().split("-")
+    const dateEnd = $('[name="date-end"]').val().split("-")
     gantt.config.end_date = new Date(dateEnd[0], dateEnd[1] - 1, dateEnd[2])
     gantt.render()
   }
