@@ -43,11 +43,6 @@ Meteor.startup(() => {
       coordinators: [
         coorId
       ]
-    }, {
-      name: 'CZ2006',
-      coordinators: [
-        coorId
-      ]
     }]
     courses.forEach((record) => {
       Courses.insert(record)
@@ -57,15 +52,10 @@ Meteor.startup(() => {
   // initialize Groups
   if (typeof Groups.findOne() === 'undefined') {
     const courseId = Courses.findOne({ name: 'CZ3002' })._id
-    const course2Id = Courses.findOne({ name: 'CZ2006' })._id
     const groups = [{
       name: 'TSA1',
       course: courseId,
       startDate: new Date('October 13, 2017')
-    }, {
-      name: 'TSA1',
-      course: course2Id,
-      startDate: new Date('October 15, 2017')
     }]
     groups.forEach((record) => {
       Groups.insert(record)
@@ -80,14 +70,9 @@ Meteor.startup(() => {
     const jeffId = Meteor.users.findOne({ 'emails.0.address': 'jeff@gmail.com' })._id
     const cjId = Meteor.users.findOne({ 'emails.0.address': 'cj@gmail.com' })._id
     const courseId = Courses.findOne({ name: 'CZ3002' })._id
-    const course2Id = Courses.findOne({ name: 'CZ2006' })._id
     const groupId = Groups.findOne({
       name: 'TSA1',
       course: courseId
-    })._id
-    const group2Id = Groups.findOne({
-      name: 'TSA1',
-      course: course2Id
     })._id
     const teams = [{
       number: 1,
@@ -99,18 +84,16 @@ Meteor.startup(() => {
     }, {
       number: 2,
       members: [
-        jeffId,
         brandonId
       ],
       group: groupId
     }, {
-      number: 1,
+      number: 3,
       members: [
-        desmondId,
         jeffId,
         cjId
       ],
-      group: group2Id
+      group: groupId
     }]
     teams.forEach((record) => {
       Teams.insert(record)
