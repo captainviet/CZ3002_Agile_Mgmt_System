@@ -53,43 +53,4 @@ Meteor.methods({
     Meteor.users.update(query, update)
     console.log(userId + ": Updated pref=" + pref)
   },
-  'users.sessionSet.isAdmin'(userId, isAdmin) {
-    check(isAdmin, Boolean)
-    const query = {
-      _id: userId
-    }
-    const update = {
-      $set: {
-        'session.isAdmin': isAdmin
-      }
-    }
-    Meteor.users.update(query, update)
-    console.log('Set isAdmin = ' + isAdmin)
-  },
-  'users.sessionSet.lastTeam'(userId, lastTeam) {
-    check(lastTeam, String)
-    const query = {
-      _id: userId
-    }
-    const update = {
-      $set: {
-        'session.lastTeam': lastTeam
-      }
-    }
-    Meteor.users.update(query, update)
-    console.log('Set lastTeam = ' + lastTeam)
-  },
-  'users.sessionSet.cachedTeam'(userId, cachedTeam) {
-    check(cachedTeam, [Object])
-    const query = {
-      _id: userId
-    }
-    const update = {
-      $set: {
-        'session.cachedTeam': cachedTeam
-      }
-    }
-    Meteor.users.update(query, update)
-    console.log('Set team = ' + team)
-  }
 })

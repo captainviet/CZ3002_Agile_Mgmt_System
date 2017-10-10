@@ -3,7 +3,7 @@
  * Defines Tasks collection
  */
 
-import {Mongo} from 'meteor/mongo'
+import { Mongo } from 'meteor/mongo'
 
 export const Tasks = new Mongo.Collection('tasks')
 
@@ -14,5 +14,7 @@ Tasks.publicFields = {
   parent: 1,
   priority: 1,
   id: 1,
-  duration: 1
+  duration: 1,
+  team: 1,
+  assignee: 1
 }

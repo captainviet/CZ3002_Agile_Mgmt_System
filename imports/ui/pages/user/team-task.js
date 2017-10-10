@@ -1,85 +1,23 @@
 import { Tasks } from '../../../api/tasks/tasks'
 import { Links } from '../../../api/links/links'
-import { Teams } from '../../../api/teams/teams'
 
 import './team-task.html'
 import '../../stylesheets/gantt.css'
 import '../../stylesheets/team-task.css'
 
-const linkHandler = Meteor.subscribe('links')
-const teamHandler = Meteor.subscribe('teams.courseInfos')
-const userHandler = Meteor.subscribe('users')
+Template.teamTask.onCreated(() => {
+  Meteor.subscribe('users')
+  const thisTeam = Session.get('this-team')
+  console.log(thisTeam)
+  Meteor.subscribe('tasks', () => {
+    console.log(Tasks.find().fetch())
+  })
+  Meteor.subscribe('links')
+})
+
 
 Template.teamTask.onRendered(function () {
-  Tracker.autorun(() => {
-    console.log("Running...")
-    if (Meteor.user()) {
-      const lastTeam = new ReactiveVar(Meteor.user().session.lastTeam)
-      console.log(lastTeam.get())
-      const taskHandler = Meteor.subscribe('tasks', lastTeam.get())
-      if (taskHandler.ready() && linkHandler.ready() && teamHandler.ready() && userHandler.ready()) {
-
-        // To populate this with users in the group Key would be the uid Label would be
-        // the users name
-        const activeTeam = Teams.findOne(lastTeam.get())
-        console.log(activeTeam)
-        const opts = activeTeam.members.map((userId) => {
-          const user = Meteor.users.findOne(userId)
-          const label = user.name ? user.name : user.emails[0].address
-          return {
-            key: userId,
-            label
-          }
-        })
-        gantt.config.lightbox.sections = [
-          {
-            name: "description",
-            height: 38,
-            map_to: "text",
-            type: "textarea",
-            focus: true
-          }, {
-            name: "priority",
-            height: 22,
-            map_to: "assignee",
-            type: "select",
-            options: opts
-          }, {
-            name: "time",
-            height: 72,
-            type: "duration",
-            map_to: "auto"
-          }
-        ];
-        gantt.attachEvent("onLightboxButton", function (button_id, node, e) {
-          const id = gantt.getState().lightbox;
-          if (button_id == "completed_button") {
-            gantt.getTask(id).progress = 1;
-            //To send sms
-          } else if (button_id == "reviewed_button") {
-            gantt.getTask(id).progress = 2;
-          }
-          gantt.updateTask(id);
-          gantt.hideLightbox();
-        });
-        gantt.attachEvent('onTaskCreated', (task) => {
-          // block create task api for team member
-          return true
-        })
-        gantt.attachEvent('onAfterTaskAdd', (id, task) => {
-          task.team = activeTeam._id
-          return true
-        })
-        gantt.locale.labels.section_template = "Details";
-
-        // Init dhtmlxGantt data adapter.
-        gantt.meteor({
-          tasks: Tasks,
-          links: Links
-        })
-      }
-    }
-  })
+  const thisTeam = Session.get('this-team')
   const daysStyle = function (date) {
     const dateToStr = gantt.date.date_to_str("%D");
     if (dateToStr(date) == "Sun" || dateToStr(date) == "Sat") {
@@ -123,6 +61,66 @@ Template.teamTask.onRendered(function () {
     }
   ];
   gantt.init("gantt-here");
+
+  gantt.locale.labels.section_template = "Details";
+  const opts = thisTeam.members.map((userId) => {
+    const user = Meteor.users.findOne(userId)
+    const label = user.name ? user.name : user.emails[0].address
+    return {
+      key: userId,
+      label
+    }
+  })
+  gantt.config.lightbox.sections = [
+    {
+      name: "description",
+      height: 38,
+      map_to: "text",
+      type: "textarea",
+      focus: true
+    }, {
+      name: "priority",
+      height: 22,
+      map_to: "assignee",
+      type: "select",
+      options: opts
+    }, {
+      name: "time",
+      height: 72,
+      type: "duration",
+      map_to: "auto"
+    }
+  ];
+
+  gantt.attachEvent("onLightboxButton", function (button_id, node, e) {
+    const id = gantt.getState().lightbox;
+    if (button_id == "completed_button") {
+      gantt.getTask(id).progress = 1;
+      //To send sms
+    } else if (button_id == "reviewed_button") {
+      gantt.getTask(id).progress = 2;
+    }
+    gantt.updateTask(id);
+    gantt.hideLightbox();
+  });
+  gantt.attachEvent('onTaskCreated', (task) => {
+    // block create task api for team member
+    return true
+  })
+  gantt.attachEvent('onAfterTaskAdd', (id, task) => {
+    if (task.team) {
+      return false
+    } else {
+      task.team = thisTeam._id
+      console.log('attached new task: ' + task.team)
+      return true
+    }
+  })
+
+  gantt.meteor({
+    tasks: Tasks,
+    links: Links
+  })
 })
 
 

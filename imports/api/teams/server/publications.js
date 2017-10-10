@@ -8,11 +8,18 @@ import { Teams } from '../teams'
 import { Groups } from '../../groups/groups'
 import { Courses } from '../../courses/courses'
 
-Meteor.publish('teams', () => {
-  return Teams.find({}, { fields: Teams.publicFields })
-})
+// Meteor.publish('teams', () => {
+//   const query = {
+//     members: {
+//       $elemMatch: {
+//         $eq: Meteor.userId()
+//       }
+//     }
+//   }
+//   return Teams.find(query, { fields: Teams.publicFields })
+// })
 
-Meteor.publishComposite('teams.courseInfos', {
+Meteor.publishComposite('teams', {
   find() {
     const query = {
       members: {
@@ -21,7 +28,10 @@ Meteor.publishComposite('teams.courseInfos', {
         }
       }
     }
-    return Teams.find(query)
+    const projection = {
+      fields: Teams.publicFields
+    }
+    return Teams.find(query, projection)
   },
   children: [{
     collectionName: 'myGroups',

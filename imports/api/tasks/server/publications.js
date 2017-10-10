@@ -4,8 +4,18 @@
  */
 
 import { Tasks } from '../tasks'
+import { Teams } from '../../teams/teams'
 
-Meteor.publish('tasks', (teamId) => {
+Meteor.publish('tasks', () => {
+  const teamId = Teams.findOne({
+    members: {
+      $elemMatch: {
+        $eq: Meteor.userId()
+      }
+    }
+  })._id
+  console.log(teamId)
+  console.log(Tasks.find({ team: teamId }, { fields: Tasks.publicFields }).fetch())
   return Tasks.find({ team: teamId }, { fields: Tasks.publicFields })
 })
 
