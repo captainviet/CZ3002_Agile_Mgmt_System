@@ -1,11 +1,11 @@
 <template name='personalTask'>
 	<div class='page-content'>
-	<h1>Welcome to your Personal Task Page<i class="fa fa-user"></i></h1>
+	<h1>Personal Task Page</h1>
   <!-- BEGIN SAMPLE TABLE PORTLET-->
 	<div class="portlet">
 	    <div class="portlet-title">
 	        <div class="caption">
-	            <i class="fa fa-bell-o"></i>List of task </div>
+	            <i class="fa fa-list-alt" aria-hidden="true"></i>List of Task</div>
 	        <div class="tools">
 	            <a href="javascript:;" class="collapse"> </a>
 	            <a href="#portlet-config" data-toggle="modal" class="config"> </a>
@@ -19,16 +19,25 @@
 	                <thead>
 	                    <tr>
 													<th>
-														<i class="fa fa-shopping-cart"></i> #
+														<i class="fa fa-tag" aria-hidden="true"></i> #
 													</th>
 	                        <th>
-	                           <i class="fa fa-briefcase"></i> Task Name
+	                           <i class="fa fa-tasks" aria-hidden="true"></i> Task
 													</th>
 	                        <th class="hidden-xs">
-	                           <i class="fa fa-user"></i> Description
+	                           <i class="fa fa-user-circle-o" aria-hidden="true"></i> Issued To
 													</th>
-	                        <th>
-	                           <i class="fa fa-shopping-cart"></i> Reviewer
+													<th class="hidden-xs startDate">
+	                          <i class="fa fa-hourglass-start" aria-hidden="true"></i> Start Date
+													</th>
+													<th class="hidden-xs">
+	                           <i class="fa fa-hourglass-end" aria-hidden="true"></i> End Date
+													</th>
+													<th class="hidden-xs">
+	                           <i class="fa fa-hourglass" aria-hidden="true"></i> Duration
+													</th>
+													<th class="hidden-xs">
+	                           <i class="fa fa-hourglass" aria-hidden="true"></i> Task Status
 													</th>
 	                    </tr>
 	                </thead>
@@ -40,12 +49,11 @@
 								              <a href="javascript:;"> {{counter}} </a>
 								          </td>
 								          <td class="hidden-xs"> {{ task_text }} </td>
-								          <td> {{ task_priority }}% </td>
-								          <td> Bob Marley </td>
-								          <td>
-								              <a href="javascript:;" class="btn btn-outline btn-circle btn-sm purple">
-								                  <i class="fa fa-edit"></i> Edit </a>
-								          </td>
+								          <td> {{ task_priority }} </td>
+													<td> {{ task_start_date }} </td>
+													<td> {{ task_end_date }} </td>
+													<td> {{ task_duration }} </td>
+													<td> {{ task_progress }} </td>
 								      </tr>
                     {{/each}}
 								  </tbody>
