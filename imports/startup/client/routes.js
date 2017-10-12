@@ -9,6 +9,7 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout'
 import '../../ui/layouts/master'
 import '../../ui/layouts/login'
 import '../../ui/layouts/register'
+import '../../ui/pages/user/dashboard'
 import '../../ui/pages/user/personal-task'
 import '../../ui/pages/user/team-task'
 import '../../ui/pages/user/task-details'
@@ -138,7 +139,14 @@ const userRoutes = FlowRouter.group({
 userRoutes.route('/home', {
   name: 'user.home',
   action() {
-    FlowRouter.go('user.team')
+    FlowRouter.go('user.dashboard')
+  }
+})
+
+userRoutes.route('/dashboard', {
+  name: 'user.dashboard',
+  action() {
+    BlazeLayout.render('master', { content: 'dashboard' })
   }
 })
 

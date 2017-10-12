@@ -64,7 +64,9 @@ Template.teamTask.onRendered(function () {
   const month = today.getMonth();
   const day = today.getDate();
   gantt.config.start_date = new Date(year, month, day);
+  $('[name="date-start"]').val(gantt.config.start_date.toLocaleDateString())
   gantt.config.end_date = new Date(year, month + 1, day);
+  $('[name="date-end"]').val(gantt.config.end_date.toLocaleDateString())
   gantt.config.scale_height = 84;
   gantt.config.scale_unit = "month";
   gantt.config.date_scale = "%F, %Y";
