@@ -5,16 +5,50 @@ import './team-task.html'
 import '../../stylesheets/gantt.css'
 import '../../stylesheets/team-task.css'
 
-Template.teamTask.onCreated(() => {
-  Meteor.subscribe('users')
-  const thisTeam = Session.get('this-team')
-  console.log(thisTeam)
-  Meteor.subscribe('tasks', () => {
-    console.log(Tasks.find().fetch())
-  })
-  Meteor.subscribe('links')
-})
+Meteor.startup(() => {
+  Tracker.autorun(() => {
+    const thisTeam = Session.get('this-team')
+    Meteor.subscribe('users', () => {
 
+      console.log(Meteor.users.find().fetch())
+      const opts = thisTeam.members.map((userId) => {
+        const user = Meteor.users.findOne(userId)
+        console.log(user)
+        const label = user.name ? user.name : user.emails[0].address
+        return {
+          key: userId,
+          label
+        }
+      })
+      console.log(opts)
+      gantt.config.lightbox.sections = [
+        {
+          name: "description",
+          height: 38,
+          map_to: "text",
+          type: "textarea",
+          focus: true
+        }, {
+          name: "priority",
+          height: 22,
+          map_to: "assignee",
+          type: "select",
+          options: opts
+        }, {
+          name: "time",
+          height: 72,
+          type: "duration",
+          map_to: "auto"
+        }
+      ];
+    })
+
+    Meteor.subscribe('tasks', () => {
+      console.log(Tasks.find().fetch())
+    })
+    Meteor.subscribe('links')
+  })
+})
 
 Template.teamTask.onRendered(function () {
   const thisTeam = Session.get('this-team')
@@ -63,34 +97,7 @@ Template.teamTask.onRendered(function () {
   gantt.init("gantt-here");
 
   gantt.locale.labels.section_template = "Details";
-  const opts = thisTeam.members.map((userId) => {
-    const user = Meteor.users.findOne(userId)
-    const label = user.name ? user.name : user.emails[0].address
-    return {
-      key: userId,
-      label
-    }
-  })
-  gantt.config.lightbox.sections = [
-    {
-      name: "description",
-      height: 38,
-      map_to: "text",
-      type: "textarea",
-      focus: true
-    }, {
-      name: "priority",
-      height: 22,
-      map_to: "assignee",
-      type: "select",
-      options: opts
-    }, {
-      name: "time",
-      height: 72,
-      type: "duration",
-      map_to: "auto"
-    }
-  ];
+
 
   gantt.attachEvent("onLightboxButton", function (button_id, node, e) {
     const id = gantt.getState().lightbox;
@@ -111,6 +118,7 @@ Template.teamTask.onRendered(function () {
     if (task.team) {
       return false
     } else {
+      console.log(thisTeam)
       task.team = thisTeam._id
       console.log('attached new task: ' + task.team)
       return true
