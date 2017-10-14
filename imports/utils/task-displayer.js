@@ -1,6 +1,58 @@
 import { Tasks } from '../api/tasks/tasks'
 
 const TaskEngine = {
+  columns: [{
+    icon: 'tag',
+    text: 'No'
+  }, {
+    icon: 'action-redo',
+    field: 'text',
+    text: 'Task'
+  }, {
+    icon: 'user',
+    field: 'assignee',
+    text: 'Assignee'
+  }, {
+    icon: 'hourglass',
+    field: 'start_date',
+    text: 'Start Date'
+  }, {
+    icon: 'hourglass',
+    field: 'end_date',
+    text: 'End Date'
+  }, {
+    icon: 'clock',
+    field: 'duration',
+    text: 'Duration'
+  }, {
+    icon: 'check',
+    field: 'progress',
+    text: 'Status'
+  }],
+  config: [{
+    title: "In Progress",
+    status: "red",
+    icon: "puzzle",
+    query: {
+      progress: {
+        $lt: 1
+      }
+    }
+  }, {
+    title: "Pending Review",
+    status: "yellow-saffron",
+    icon: "note",
+    query: {
+      progress: 1
+    }
+  }, {
+    title: "Reviewed",
+    status: "green-sharp",
+    icon: "like",
+    query: {
+      progress: 2
+    }
+  }],
   taskRecords: (progress, isPersonal) => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
@@ -10,26 +62,19 @@ const TaskEngine = {
     if (isPersonal) {
       query.assignee = Meteor.userId()
     }
-    if (progress !== 0) {
-      query.progress = progress
+    if (typeof progress !== 'undefined') {
+      query.progress = TaskEngine.config[progress].query.progress
     }
-    console.log(query)
     const opts = {
       sort: {
         end_date: 1
       }
     }
     const taskRecords = Tasks.find(query, opts).map((item) => {
-      let task_progress
-      switch (item.progress) {
-        case 1:
-          task_progress = 'Pending Review'
-          break;
-        case 2:
-          task_progress = 'Reviewed'
-        default:
-          task_progress = 'In Progress'
-      }
+
+      const progressInt = parseInt(item.progress)
+      const progressCat = progressInt < 1 ? 0 : progressInt
+      const task_progress = TaskEngine.config[progressCat].title
       const user = Meteor.users.findOne(item.assignee)
       const name = user.name ? user.name : user.emails[0].address
       return {
@@ -47,11 +92,11 @@ const TaskEngine = {
   tableName: (progress) => {
     let tableName
     if (typeof progress === 'undefined') {
-      tableName = 'Task In Progress'
+      tableName = 'List of Tasks'
     } else {
       switch (progress) {
         case 0:
-          tableName = 'List of Tasks'
+          tableName = 'Task In Progress'
           break
         case 1:
           tableName = 'Task Pending Review'
@@ -63,34 +108,13 @@ const TaskEngine = {
     }
     return tableName
   },
-  columns: [{
-    icon: 'tag',
-    text: 'No'
-  }, {
-    icon: 'action-redo',
-    text: 'Task'
-  }, {
-    icon: 'user',
-    text: 'Assignee'
-  }, {
-    icon: 'hourglass',
-    text: 'Start Date'
-  }, {
-    icon: 'hourglass',
-    text: 'End Date'
-  }, {
-    icon: 'clock',
-    text: 'Duration'
-  }, {
-    icon: 'check',
-    text: 'Status'
-  }]
 }
 
 export const TaskDisplayer = {
+  config: TaskEngine.config,
   tablizePersonal: function (progress) {
 
-    // compute taskRecords
+    // compute taskRecords for personal
     const taskRecords = TaskEngine.taskRecords(progress, true)
     if (taskRecords.length === 0) {
       return null
@@ -110,7 +134,7 @@ export const TaskDisplayer = {
   },
   tablizeTeam: function (progress) {
 
-    // compute taskRecords
+    // compute taskRecords for team
     const taskRecords = TaskEngine.taskRecords(progress, false)
     if (taskRecords.length === 0) {
       return null

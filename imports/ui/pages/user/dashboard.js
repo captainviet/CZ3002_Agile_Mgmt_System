@@ -16,30 +16,7 @@ Meteor.startup(() => {
 Template.dashboard.helpers({
   dashboardStat() {
     const totalTask = Tasks.find().count()
-    const config = [{
-      title: "In Progress",
-      status: "red",
-      icon: "puzzle",
-      query: {
-        progress: {
-          $exists: 0
-        }
-      }
-    }, {
-      title: "Pending Review",
-      status: "yellow-saffron",
-      icon: "note",
-      query: {
-        progress: 1
-      }
-    }, {
-      title: "Reviewed",
-      status: "green-sharp",
-      icon: "like",
-      query: {
-        progress: 2
-      }
-    }]
+    const config = TaskDisplayer.config
     return config.map((card) => {
       const count = Tasks.find(card.query).count()
       const progress = parseFloat(count * 100 / totalTask).toFixed(1)

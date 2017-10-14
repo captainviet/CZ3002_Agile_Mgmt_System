@@ -117,14 +117,17 @@ Template.teamTask.onRendered(function () {
     return true
   })
   gantt.attachEvent('onAfterTaskAdd', (id, task) => {
-    if (task.team) {
+    console.log(thisTeam)
+    if (task.team && task.progress) {
       return false
-    } else {
-      console.log(thisTeam)
-      task.team = thisTeam._id
-      console.log('attached new task: ' + task.team)
-      return true
     }
+    if (!task.team) {
+      task.team = thisTeam._id
+    }
+    if (!task.progress) {
+      task.progress = 0
+    }
+    return true
   })
 
   gantt.meteor({
