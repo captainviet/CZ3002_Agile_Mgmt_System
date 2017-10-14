@@ -1,7 +1,8 @@
 export const SidebarMenu = {
   dashboard: {
     icon: "home",
-    title: "Dashboard"
+    title: "Dashboard",
+    route: "user.dashboard"
   },
   menus: [
     {

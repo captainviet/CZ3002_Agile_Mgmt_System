@@ -64,7 +64,9 @@ Template.teamTask.onRendered(function () {
   const month = today.getMonth();
   const day = today.getDate();
   gantt.config.start_date = new Date(year, month, day);
+  $('[name="date-start"]').val(gantt.config.start_date.toLocaleDateString())
   gantt.config.end_date = new Date(year, month + 1, day);
+  $('[name="date-end"]').val(gantt.config.end_date.toLocaleDateString())
   gantt.config.scale_height = 84;
   gantt.config.scale_unit = "month";
   gantt.config.date_scale = "%F, %Y";
@@ -115,14 +117,17 @@ Template.teamTask.onRendered(function () {
     return true
   })
   gantt.attachEvent('onAfterTaskAdd', (id, task) => {
-    if (task.team) {
+    console.log(thisTeam)
+    if (task.team && task.progress) {
       return false
-    } else {
-      console.log(thisTeam)
-      task.team = thisTeam._id
-      console.log('attached new task: ' + task.team)
-      return true
     }
+    if (!task.team) {
+      task.team = thisTeam._id
+    }
+    if (!task.progress) {
+      task.progress = 0
+    }
+    return true
   })
 
   gantt.meteor({
