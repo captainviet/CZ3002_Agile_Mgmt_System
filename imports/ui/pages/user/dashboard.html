@@ -22,7 +22,6 @@
         </div>
       </div>
     </div>
-    {{#with taskData 1}} {{> taskTable}} {{/with}} {{#with taskData 0}} {{> taskTable}} {{/with}} {{#with taskData 2}} {{> taskTable}}
-    {{/with}}
+    {{> taskTable progress=1 for='team'}} {{> taskTable progress=0 for='team'}} {{> taskTable progress=2 for='team'}}
   </div>
 </template>

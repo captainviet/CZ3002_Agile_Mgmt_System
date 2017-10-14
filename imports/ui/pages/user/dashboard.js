@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating'
 import { Tasks } from '../../../api/tasks/tasks'
+import { TaskEngine } from '../../../utils/task-engine'
 
-import { TaskDisplayer } from '../../../utils/task-displayer'
 import './dashboard.html'
 import '../../components/dashboard/stat-card'
 import '../../components/table/task-table'
@@ -16,7 +16,7 @@ Meteor.startup(() => {
 Template.dashboard.helpers({
   dashboardStat() {
     const totalTask = Tasks.find().count()
-    const config = TaskDisplayer.config
+    const config = TaskEngine.config
     return config.map((card) => {
       const count = Tasks.find(card.query).count()
       const progress = parseFloat(count * 100 / totalTask).toFixed(1)
@@ -26,6 +26,4 @@ Template.dashboard.helpers({
       return card
     })
   },
-  taskData: TaskDisplayer.tablizeTeam
-
 })

@@ -1,6 +1,6 @@
 import { Tasks } from '../api/tasks/tasks'
 
-const TaskEngine = {
+export const TaskEngine = {
   columns: [{
     icon: 'tag',
     text: 'No'
@@ -53,7 +53,7 @@ const TaskEngine = {
       progress: 2
     }
   }],
-  taskRecords: (progress, isPersonal) => {
+  taskRecords: (progress, isPersonal, opts) => {
     const monthNames = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
@@ -64,11 +64,6 @@ const TaskEngine = {
     }
     if (typeof progress !== 'undefined') {
       query.progress = TaskEngine.config[progress].query.progress
-    }
-    const opts = {
-      sort: {
-        end_date: 1
-      }
     }
     const taskRecords = Tasks.find(query, opts).map((item) => {
 
@@ -108,48 +103,4 @@ const TaskEngine = {
     }
     return tableName
   },
-}
-
-export const TaskDisplayer = {
-  config: TaskEngine.config,
-  tablizePersonal: function (progress) {
-
-    // compute taskRecords for personal
-    const taskRecords = TaskEngine.taskRecords(progress, true)
-    if (taskRecords.length === 0) {
-      return null
-    }
-
-    // compute tableName
-    const tableName = TaskEngine.tableName(progress)
-
-    // compute columns
-    const columns = TaskEngine.columns
-
-    return {
-      tableName,
-      columns,
-      taskRecords
-    }
-  },
-  tablizeTeam: function (progress) {
-
-    // compute taskRecords for team
-    const taskRecords = TaskEngine.taskRecords(progress, false)
-    if (taskRecords.length === 0) {
-      return null
-    }
-
-    // compute tableName
-    const tableName = TaskEngine.tableName(progress)
-
-    // compute columns
-    const columns = TaskEngine.columns
-
-    return {
-      tableName,
-      columns,
-      taskRecords
-    }
-  }
 }
