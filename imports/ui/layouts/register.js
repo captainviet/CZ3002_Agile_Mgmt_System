@@ -47,7 +47,10 @@ Template
       const password2 = $('#password2').val()
       console.log(email + '-' + password + '-' + password2)
       if (password === password2) {
-        Accounts.createUser({email, password, notificationPreference: 'email'})
+        const profile = {
+          notificationPreference: 'email'
+        }
+        Meteor.call('users.create', email, password, profile)
         console.log("Succesfully created user")
         $('#username').val('')
         $('#password').val('')

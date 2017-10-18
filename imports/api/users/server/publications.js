@@ -8,13 +8,20 @@ Meteor.publish('users', function () {
       emails: 1,
       name: 1,
       phone: 1,
-      session: 1
+      confirmed: 1,
     }
   }
   return Meteor.users.find(selector, options)
 })
 
 Meteor.methods({
+  'users.create'(email, password, profile) {
+    Accounts.createUser({
+      email,
+      password,
+      profile
+    })
+  },
   'users.updatePersonalInfo'(userId, name, phone) {
     check(name, String)
     check(phone, String)
@@ -23,7 +30,7 @@ Meteor.methods({
     }
     let update = {
       $set: {
-        name: name,
+        'profile.name': name,
       }
     }
     if (name) {
@@ -32,7 +39,7 @@ Meteor.methods({
     console.log(userId + ": Updated name=" + name)
     update = {
       $set: {
-        phone: phone
+        'profile.phone': phone
       }
     }
     if (phone) {
@@ -47,7 +54,7 @@ Meteor.methods({
     }
     const update = {
       $set: {
-        notificationPreference: pref
+        'profile.notificationPreference': pref
       }
     }
     Meteor.users.update(query, update)
