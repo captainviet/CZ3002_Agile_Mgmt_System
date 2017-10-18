@@ -94,6 +94,7 @@ Template.userProfile.events({
         if (e) {
           message = e.reason
         } else {
+          Meteor.call('users.markConfirmed', Meteor.userId())
           message = "Change password successful"
           success = true
         }

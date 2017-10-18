@@ -22,6 +22,17 @@ Meteor.methods({
       profile
     })
   },
+  'users.markConfirmed'(userId) {
+    const query = {
+      _id: userId
+    }
+    const update = {
+      $set: {
+        'profile.confirmed': true
+      }
+    }
+    Meteor.users.update(query, update)
+  },
   'users.updatePersonalInfo'(userId, name, phone) {
     check(name, String)
     check(phone, String)
