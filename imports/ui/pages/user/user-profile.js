@@ -11,19 +11,19 @@ Template.userProfile.onCreated(function () {
 
 Template.userProfile.helpers({
   isChecked(value) {
-    return value === Meteor.user().notificationPreference ? "checked" : ""
+    return value === Meteor.user().profile.notificationPreference ? "checked" : ""
   },
   isChosen(value) {
-    return value === Meteor.user().notificationPreference
+    return value === Meteor.user().profile.notificationPreference
   },
   username() {
     return Meteor.user().emails[0].address
   },
   name() {
-    return Meteor.user().name
+    return Meteor.user().profile.name
   },
   phone() {
-    return Meteor.user().phone
+    return Meteor.user().profile.phone
   },
   piError() {
     const instance = Template.instance()
@@ -94,6 +94,7 @@ Template.userProfile.events({
         if (e) {
           message = e.reason
         } else {
+          Meteor.call('users.markConfirmed', Meteor.userId())
           message = "Change password successful"
           success = true
         }

@@ -6,30 +6,26 @@ import { Permissions } from '../../api/permissions/permissions'
 Meteor.startup(() => {
   // initialize Users
   if (typeof Meteor.users.findOne() === 'undefined') {
-    const users = [{
-      email: "xuanvu@gmail.com",
-      password: "123123",
-    }, {
-      email: "desmond@gmail.com",
-      password: "123123",
-    }, {
-      email: "joel@gmail.com",
-      password: "123123",
-    }, {
-      email: "brandon@gmail.com",
-      password: "123123",
-    }, {
-      email: "jeff@gmail.com",
-      password: "123123",
-    }, {
-      email: "cj@gmail.com",
-      password: "123123",
-    }, {
-      email: "althea@gmail.com",
-      password: "123123",
-    }]
-    users.forEach((user) => {
-      Accounts.createUser(user)
+    const users = [
+      "xuanvu@gmail.com",
+      "desmond@gmail.com",
+      "joel@gmail.com",
+      "brandon@gmail.com",
+      "jeff@gmail.com",
+      "cj@gmail.com",
+      "althea@gmail.com",
+    ]
+    const password = '123123'
+    const profile = {
+      notificationPreference: 'email',
+      confirmed: true
+    }
+    users.forEach((email) => {
+      Accounts.createUser({
+        email,
+        password,
+        profile
+      })
     })
     const vinceId = Meteor.users.findOne({ 'emails.0.address': 'xuanvu@gmail.com' })
     Roles.addUsersToRoles(vinceId, Permissions.admin, Roles.GLOBAL_GROUP)

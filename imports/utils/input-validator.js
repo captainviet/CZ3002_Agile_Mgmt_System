@@ -1,6 +1,6 @@
 export const InputValidator = {
   isValidEmail: (text) => {
-    const mailRegex = /^\w+@\w+(\.\w+)+$/i
+    const mailRegex = /^\w(\.|\w)*@\w+(\.\w+)+$/i
     return text.search(mailRegex) == 0
   },
   isValidPhone: (phone) => {

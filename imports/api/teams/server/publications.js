@@ -8,17 +8,6 @@ import { Teams } from '../teams'
 import { Groups } from '../../groups/groups'
 import { Courses } from '../../courses/courses'
 
-// Meteor.publish('teams', () => {
-//   const query = {
-//     members: {
-//       $elemMatch: {
-//         $eq: Meteor.userId()
-//       }
-//     }
-//   }
-//   return Teams.find(query, { fields: Teams.publicFields })
-// })
-
 Meteor.publishComposite('teams', {
   find() {
     const query = {
@@ -59,4 +48,17 @@ Meteor.publishComposite('teams', {
   }]
 })
 
-Meteor.methods({})
+Meteor.methods({
+  'teams.addMember'(teamId, userId) {
+    const query = {
+      _id: teamId
+    }
+    const update = {
+      $push: {
+        members: userId
+      }
+    }
+    Teams.update(query, update)
+    console.log('Added member with email: ' + Meteor.users.findOne(userId).emails[0].address + ' to teamId: ' + teamId)
+  },
+})
