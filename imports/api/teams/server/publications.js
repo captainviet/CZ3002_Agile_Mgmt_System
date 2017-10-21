@@ -9,6 +9,10 @@ import { Groups } from '../../groups/groups'
 import { Courses } from '../../courses/courses'
 import { UserHelper } from '../../users/helper'
 
+Meteor.publish('teams', () => {
+  return Teams.find({}, {fields: Teams.publicFields})
+})
+
 Meteor.publishComposite('teams', {
   find() {
     const query = {
