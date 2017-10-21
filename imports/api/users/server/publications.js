@@ -26,9 +26,9 @@ Meteor.methods({
       _id: userId
     }
     const email = UserHelper.getUserEmail(userId)
-    Meteor.users.remove(query)
     Meteor.call('courses.removeCoordinator', userId)
     Meteor.call('teams.removeMember', userId)
+    Meteor.users.remove(query)
     console.log('Removed user with email: ' + email)
   },
   'users.markConfirmed'(userId) {
