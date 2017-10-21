@@ -4,6 +4,7 @@
  */
 
 import {Courses} from '../courses'
+import {UserHelper} from '../../users/helper'
 
 Meteor.publish('courses', () => {
   return Courses.find({}, {fields: Courses.publicFields})
@@ -19,7 +20,30 @@ Meteor.methods({
         coordinators: userId
       }
     }
+    const email = UserHelper.getUserEmail(userId)
     Courses.update(query, update)
-    console.log('Added coordinator with email: ' + Meteor.users.findOne(userId).emails[0].address + ' to course ' + Courses.findOne(courseId).name)
+    console.log('Added coordinator with email: ' + email + ' to course ' + Courses.findOne(courseId).name)
+  },
+  'courses.removeCoordinator'(userId) {
+    const query = {
+      coordinators: {
+        $elemMatch: {
+          $eq: userId
+        }
+      }
+    }
+    const update = {
+      $pull: {
+        coordinators: userId
+      }
+    }
+    const email = UserHelper.getUserEmail(userId)
+    Courses.update(query, update, (err, record) => {
+      if (err) {
+        throw new Meteor.Error(err)
+      } else {
+        console.log(record ? 'Removed coordinator with email: ' + email : 'No course has the coordinator with email: ' + email)
+      }
+    })
   },
 })
