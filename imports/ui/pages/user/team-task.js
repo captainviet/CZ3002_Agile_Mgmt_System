@@ -8,61 +8,61 @@ import '../../stylesheets/team-task.css'
 var isInitial = true
 
 Tasks.find().observeChanges({
-   added: function (id, fields) {
-       if(!isInitial){
-        console.log(fields.text)
-        console.log(id)
-       console.log("task added lol")
-       sendemailto = Tasks.findOne(id).assignee
-       taskheader = Tasks.findOne(id).text
-       console.log(sendemailto)
-       const useremail = Meteor.users.findOne(sendemailto)
-       emailadd = useremail.emails[0].address
-       console.log(emailadd + ' emailadd')
-       Email.send("teamvoltase@gmail.com",
+  added: function (id, fields) {
+    if (!isInitial) {
+      console.log(fields.text)
+      console.log(id)
+      console.log("task added lol")
+      sendemailto = Tasks.findOne(id).assignee
+      taskheader = Tasks.findOne(id).text
+      console.log(sendemailto)
+      const useremail = Meteor.users.findOne(sendemailto)
+      emailadd = useremail.emails[0].address
+      console.log(emailadd + ' emailadd')
+      Email.send("teamvoltase@gmail.com",
         // emailadd,
-        'r302103@mvrht.net',
+        'xuanvu001@e.ntu.edu.sg',
         "Volt: A new task has been assigned to you",
         "Task: " + taskheader + " has been assigned to you",
         // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
         "smtp.gmail.com",
-           "teamvoltase@gmail.com",
-           "teamvolt!");
-        console.log("sent email yo")
-        }
+        "teamvoltase@gmail.com",
+        "teamvolt!");
+      console.log("sent email yo")
+    }
     console.log('nonono you are not new!')
-        
-   },
-   changed: function (id, fields) {
-       console.log("task changed lol")
-       console.log(id + ' id')
-        sendemailto = Tasks.findOne(id).assignee
-        console.log(sendemailto)
-       taskheader = Tasks.findOne(id).text
-       console.log(fields.progress + ' fields text')
-       if(fields.progress==1){
-        console.log("progress==1")
-        console.log(sendemailto)
-       const useremail = Meteor.users.findOne(sendemailto)
-       console.log(useremail + ' useremail')
-       emailadd = useremail.emails[0].address
-       console.log(emailadd)
-       Email.send("teamvoltase@gmail.com",
+
+  },
+  changed: function (id, fields) {
+    console.log("task changed lol")
+    console.log(id + ' id')
+    sendemailto = Tasks.findOne(id).assignee
+    console.log(sendemailto)
+    taskheader = Tasks.findOne(id).text
+    console.log(fields.progress + ' fields text')
+    if (fields.progress == 1) {
+      console.log("progress==1")
+      console.log(sendemailto)
+      const useremail = Meteor.users.findOne(sendemailto)
+      console.log(useremail + ' useremail')
+      emailadd = useremail.emails[0].address
+      console.log(emailadd)
+      Email.send("teamvoltase@gmail.com",
         // emailadd,
-        'r302103@mvrht.net',
+        'xuanvu001@e.ntu.edu.sg',
         "Volt: Task has been completed, Review Needed",
         "Task: " + taskheader + " has been marked completed. Please review.",
         // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
         "smtp.gmail.com",
-           "teamvoltase@gmail.com",
-           "teamvolt!");
+        "teamvoltase@gmail.com",
+        "teamvolt!");
 
-       }
-       // console.log(sendemailto)
-       const useremail = Meteor.users.findOne(sendemailto)
-   },
-   removed: function (id) {
-       console.log("task removed lol")
+    }
+    // console.log(sendemailto)
+    const useremail = Meteor.users.findOne(sendemailto)
+  },
+  removed: function (id) {
+    console.log("task removed lol")
   }
 });
 
