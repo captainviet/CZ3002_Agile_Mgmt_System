@@ -1,9 +1,70 @@
 import { Tasks } from '../../../api/tasks/tasks'
 import { Links } from '../../../api/links/links'
 
+
 import './team-task.html'
 import '../../stylesheets/gantt.css'
 import '../../stylesheets/team-task.css'
+var isInitial = true
+
+Tasks.find().observeChanges({
+   added: function (id, fields) {
+       if(!isInitial){
+        console.log(fields.text)
+        console.log(id)
+       console.log("task added lol")
+       sendemailto = Tasks.findOne(id).assignee
+       taskheader = Tasks.findOne(id).text
+       console.log(sendemailto)
+       const useremail = Meteor.users.findOne(sendemailto)
+       emailadd = useremail.emails[0].address
+       console.log(emailadd + ' emailadd')
+       Email.send("teamvoltase@gmail.com",
+        // emailadd,
+        'r302103@mvrht.net',
+        "Volt: A new task has been assigned to you",
+        "Task: " + taskheader + " has been assigned to you",
+        // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
+        "smtp.gmail.com",
+           "teamvoltase@gmail.com",
+           "teamvolt!");
+        console.log("sent email yo")
+        }
+    console.log('nonono you are not new!')
+        
+   },
+   changed: function (id, fields) {
+       console.log("task changed lol")
+       console.log(id + ' id')
+        sendemailto = Tasks.findOne(id).assignee
+        console.log(sendemailto)
+       taskheader = Tasks.findOne(id).text
+       console.log(fields.progress + ' fields text')
+       if(fields.progress==1){
+        console.log("progress==1")
+        console.log(sendemailto)
+       const useremail = Meteor.users.findOne(sendemailto)
+       console.log(useremail + ' useremail')
+       emailadd = useremail.emails[0].address
+       console.log(emailadd)
+       Email.send("teamvoltase@gmail.com",
+        // emailadd,
+        'r302103@mvrht.net',
+        "Volt: Task has been completed, Review Needed",
+        "Task: " + taskheader + " has been marked completed. Please review.",
+        // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
+        "smtp.gmail.com",
+           "teamvoltase@gmail.com",
+           "teamvolt!");
+
+       }
+       // console.log(sendemailto)
+       const useremail = Meteor.users.findOne(sendemailto)
+   },
+   removed: function (id) {
+       console.log("task removed lol")
+  }
+});
 
 Meteor.startup(() => {
   Tracker.autorun(() => {
@@ -45,9 +106,13 @@ Meteor.startup(() => {
 
     Meteor.subscribe('tasks', () => {
       console.log(Tasks.find().fetch())
+      // isInitial = false
     })
+
     Meteor.subscribe('links')
+
   })
+
 })
 
 Template.teamTask.onRendered(function () {
@@ -102,6 +167,7 @@ Template.teamTask.onRendered(function () {
 
 
   gantt.attachEvent("onLightboxButton", function (button_id, node, e) {
+    console.log("insinde onLightboxButton")
     const id = gantt.getState().lightbox;
     if (button_id == "completed_button") {
       gantt.getTask(id).progress = 1;
@@ -114,10 +180,16 @@ Template.teamTask.onRendered(function () {
   });
   gantt.attachEvent('onTaskCreated', (task) => {
     // block create task api for team member
+    console.log("inside on taskcreated")
+    isInitial = false
     return true
   })
-  gantt.attachEvent('onAfterTaskAdd', (id, task) => {
-    console.log(thisTeam)
+  gantt.attachEvent('onBeforeTaskAdd', (id, task) => {
+    console.log("inside onBeforeTaskAdd")
+    // if (button_id == "dhx_save_btn") {
+    // console.log(thisTeam)
+    // console.log("yolo")
+    // }
     if (task.team && task.progress) {
       return false
     }
@@ -130,10 +202,14 @@ Template.teamTask.onRendered(function () {
     return true
   })
 
+  console.log('just before gantt.meteor')
+
   gantt.meteor({
     tasks: Tasks,
     links: Links
   })
+  console.log('just after gantt.meteor')
+
 })
 
 
@@ -159,3 +235,4 @@ Template.teamTask.events({
     gantt.render()
   }
 })
+
