@@ -25,13 +25,17 @@ Template.userProfile.helpers({
   phone() {
     return Meteor.user().profile.phone
   },
-  piError() {
+  piMessage() {
     const instance = Template.instance()
-    return instance.state.get('pi-error')
+    return instance.state.get('pi-message')
   },
-  pwError() {
+  pwMessage() {
     const instance = Template.instance()
-    return instance.state.get('pw-error')
+    return instance.state.get('pw-message')
+  },
+  npMessage() {
+    const instance = Template.instance()
+    return instance.state.get('np-message')
   },
   piSuccess() {
     const instance = Template.instance()
@@ -40,6 +44,10 @@ Template.userProfile.helpers({
   pwSuccess() {
     const instance = Template.instance()
     return instance.state.get('pw-success') ? 'alert-success' : 'alert-danger'
+  },
+  npSuccess() {
+    const instance = Template.instance()
+    return instance.state.get('np-success') ? 'alert-success' : 'alert-danger'
   }
 })
 
@@ -52,7 +60,7 @@ Template.userProfile.events({
       message = 'Invalid Phone Number'
     }
     const instance = Template.instance()
-    instance.state.set('pi-error', message)
+    instance.state.set('pi-message', message)
   },
   'click #personal-info-submit, submit #personal-info-form'(e) {
     e.preventDefault()
@@ -75,7 +83,7 @@ Template.userProfile.events({
       $('#phone').val('')
       $('#name').val('')
     }
-    instance.state.set('pi-error', message)
+    instance.state.set('pi-message', message)
     instance.state.set('pi-success', success)
   },
   'click #pw-submit, submit #pw-form'(e) {
@@ -98,14 +106,14 @@ Template.userProfile.events({
           message = "Change password successful"
           success = true
         }
-        instance.state.set('pw-error', message)
+        instance.state.set('pw-message', message)
         instance.state.set('pw-success', success)
       })
       $('#pw-current').val('')
       $('#pw-new').val('')
       $('#pw-verify').val('')
     }
-    instance.state.set('pw-error', message)
+    instance.state.set('pw-message', message)
     instance.state.set('pw-success', success)
   },
   'click #np-submit, submit #np-form'(e) {
@@ -113,6 +121,18 @@ Template.userProfile.events({
     const pref = $('input[name="notification-preference"]:checked').val()
     console.log(pref)
 
-    Meteor.call('users.updateNotificationPreference', Meteor.userId(), pref)
+    const instance = Template.instance()
+    let message
+    let success
+    if (pref === 'sms' && !Meteor.user().profile.phone) {
+      message = 'Please add your phone number before you changed to SMS.'
+      success = false
+    } else {
+      Meteor.call('users.updateNotificationPreference', Meteor.userId(), pref)
+      message = 'Preference updated.'
+      success = true
+    }
+    instance.state.set('np-message', message)
+    instance.state.set('np-success', success)
   }
 })

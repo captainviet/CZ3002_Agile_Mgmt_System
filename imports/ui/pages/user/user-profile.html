@@ -25,9 +25,9 @@
                 <i class="fa fa-phone-square fa-fw font-dark"></i>&nbsp;Phone Number</label>
               <input type="text" id='phone' class="form-control input-circle" placeholder="{{phone}}">
             </div>
-            <div class="alert {{piSuccess}} {{#unless piError}}display-hide{{/unless}}">
+            <div class="alert {{piSuccess}} {{#unless piMessage}}display-hide{{/unless}}">
               <button class="close" data-close="alert"></button>
-              <span>{{piError}}</span>
+              <span>{{piMessage}}</span>
             </div>
             <input type="submit" id='personal-info-submit' class="btn blue" value='Update'>
             <input type="button" id='personal-info-cancel' class="btn default" value='Cancel'>
@@ -61,9 +61,9 @@
                 <i class="fa fa-lock fa-fw font-dark"></i>&nbsp;Verify New Password</label>
               <input type="password" id='pw-verify' class="form-control input-circle" placeholder="Verify New Password">
             </div>
-            <div class="alert {{pwSuccess}} {{#unless pwError}}display-hide{{/unless}}">
+            <div class="alert {{pwSuccess}} {{#unless pwMessage}}display-hide{{/unless}}">
               <button class="close" data-close="alert"></button>
-              <span>{{pwError}}</span>
+              <span>{{pwMessage}}</span>
             </div>
             <input type="submit" id='pw-submit' class="btn blue" value='Update'>
             <input type="button" id='pw-cancel' class="btn default" value='Cancel'>
@@ -99,6 +99,10 @@
                   <i class='fa
                   fa-check-circle font-green-jungle'></i>{{/if}}
                 </label>
+              </div>
+              <div class="alert {{npSuccess}} {{#unless npMessage}}display-hide{{/unless}}">
+                <button class="close" data-close="alert"></button>
+                <span>{{npMessage}}</span>
               </div>
               <input type="submit" id='np-submit' class="btn blue" value='Update'>
               <input type="button" id='np-cancel' class="btn default" value='Cancel'>
