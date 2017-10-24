@@ -18,6 +18,7 @@ import '../../ui/pages/admin/user-list'
 import '../../ui/pages/admin/course-list'
 import '../../ui/pages/admin/group-list'
 import '../../ui/pages/admin/team-list'
+import '../../ui/pages/admin/edit-user'
 
 const redirectIfLoggedIn = (ctx, redirect) => {
   if (Meteor.user() || Meteor.loggingIn()) {
@@ -127,6 +128,13 @@ adminRoutes.route('/team', {
   name: 'admin.team',
   action() {
     BlazeLayout.render('master', { content: 'teamList' })
+  }
+})
+
+adminRoutes.route('/edituser', {
+  name: 'admin.edituser',
+  action() {
+    BlazeLayout.render('master', { content: 'edituserList' })
   }
 })
 

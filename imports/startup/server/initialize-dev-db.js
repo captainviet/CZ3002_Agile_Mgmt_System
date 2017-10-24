@@ -39,6 +39,11 @@ Meteor.startup(() => {
       coordinators: [
         coorId
       ]
+    }, {
+      name: 'CZ3003',
+      coordinators: [
+        coorId
+      ]
     }]
     courses.forEach((record) => {
       Courses.insert(record)
@@ -48,9 +53,22 @@ Meteor.startup(() => {
   // initialize Groups
   if (typeof Groups.findOne() === 'undefined') {
     const courseId = Courses.findOne({ name: 'CZ3002' })._id
+    const courseId1 = Courses.findOne({ name: 'CZ3003' })._id
     const groups = [{
       name: 'TSA1',
       course: courseId,
+      startDate: new Date('October 13, 2017')
+    }, {
+      name: 'TSA2',
+      course: courseId,
+      startDate: new Date('October 13, 2017')
+    }, {
+      name: 'SSAP1',
+      course: courseId1,
+      startDate: new Date('October 13, 2017')
+    }, {
+      name: 'SSAP2',
+      course: courseId1,
       startDate: new Date('October 13, 2017')
     }]
     groups.forEach((record) => {
@@ -66,9 +84,22 @@ Meteor.startup(() => {
     const jeffId = Meteor.users.findOne({ 'emails.0.address': 'jeff@gmail.com' })._id
     const cjId = Meteor.users.findOne({ 'emails.0.address': 'cj@gmail.com' })._id
     const courseId = Courses.findOne({ name: 'CZ3002' })._id
+    const courseId1 = Courses.findOne({ name: 'CZ3003' })._id
     const groupId = Groups.findOne({
       name: 'TSA1',
       course: courseId
+    })._id
+    const groupId1 = Groups.findOne({
+      name: 'TSA2',
+      course: courseId
+    })._id
+    const groupId2 = Groups.findOne({
+      name: 'SSAP1',
+      course: courseId1
+    })._id
+    const groupId3 = Groups.findOne({
+      name: 'SSAP2',
+      course: courseId1
     })._id
     const teams = [{
       number: 1,
@@ -84,12 +115,42 @@ Meteor.startup(() => {
       ],
       group: groupId
     }, {
-      number: 3,
+      number: 10,
       members: [
-        jeffId,
+        jeffId
+      ],
+      group: groupId1
+    }, {
+      number: 11,
+      members: [
         cjId
       ],
-      group: groupId
+      group: groupId1
+    }, {
+      number: 100,
+      members: [
+        cjId
+      ],
+      group: groupId2
+    }, {
+      number: 101,
+      members: [
+        jeffId,
+        desmondId
+      ],
+      group: groupId2
+    }, {
+      number: 102,
+      members: [
+        brandonId
+      ],
+      group: groupId3
+    }, {
+      number: 103,
+      members: [
+        joelId
+      ],
+      group: groupId3
     }]
     teams.forEach((record) => {
       Teams.insert(record)
