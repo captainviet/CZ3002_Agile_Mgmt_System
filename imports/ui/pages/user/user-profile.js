@@ -72,9 +72,6 @@ Template.userProfile.events({
       message = 'Invalid Phone Number'
     } else {
       const name = $('#name').val()
-      if (!name) {
-        return
-      }
       console.log(phone + "-" + name)
       message = 'Personal Info Changed Successfully'
       success = true
