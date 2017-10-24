@@ -8,7 +8,7 @@
 <template name='navMenu'>
   <div class="top-menu">
     <ul class="nav navbar-nav pull-right">
-      {{> courseNav}} {{> todoNav}} {{> userNav}}
+      {{#if isAdmin}} {{> courseNav}} {{> todoNav}} {{/if}} {{> userNav}}
     </ul>
   </div>
 </template>
