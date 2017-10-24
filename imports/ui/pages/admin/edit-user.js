@@ -17,13 +17,16 @@ Template.edituserList.onCreated(function () {
 })
 
 const Registrar = {
-  admin: (email, role,) => {
+  admin: (email, role) => {
+    console.log("Calling maingun to add admin")
     Meteor.call('mailgun.sendRegisterEmail', email, role)
   },
   coordinator: (email, role, courseId) => {
+    console.log("Calling maingun to add coordinator")
     Meteor.call('mailgun.sendRegisterEmail', email, role, courseId)
   },
   student: (email, role, teamId) => {
+    console.log("Calling maingun to add student")
     Meteor.call('mailgun.sendRegisterEmail', email, role, teamId)
   },
 }
@@ -55,7 +58,7 @@ Template.edituserList.helpers({
   userCreated() {
     const instance = Template.instance()
     console.log("Inside userCreated")
-    return instance.state.get('create-success-message')
+    return instance.state.get('create-success')
   },
   userCreatedModal() {
     swal("Done!", "User has been created!", "success");
@@ -178,10 +181,8 @@ Template.edituserList.events({
         break
       case 'teamLeader':
       case 'teamMember':
-        let teamOfUser = Teams.find(queryStudent).fetch()
         console.log("teamLeader or teamMember case")
-        //let teamOfUser = Teams.find({'number':1}).fetch()
-        console.log(teamOfUser)
+        let teamOfUser = Teams.find(queryStudent).fetch()
         const teamId = teamOfUser[0]._id
         Registrar.student(email, role, teamId)
         break
@@ -189,7 +190,7 @@ Template.edituserList.events({
         break
     }
     const instance = Template.instance()
-    message = 'User has been created!'
-    instance.state.set('create-success-message', message)
+    success = true
+    instance.state.set('create-success', success)
   }
 })
