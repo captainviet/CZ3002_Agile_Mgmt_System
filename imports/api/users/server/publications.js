@@ -7,6 +7,7 @@ Meteor.publish('users', function () {
     fields: {
       emails: 1,
       name: 1,
+      profile: 1
     }
   }
   return Meteor.users.find(selector, options)

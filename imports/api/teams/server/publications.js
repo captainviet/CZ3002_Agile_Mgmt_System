@@ -9,7 +9,7 @@ import { Groups } from '../../groups/groups'
 import { Courses } from '../../courses/courses'
 import { UserHelper } from '../../users/helper'
 
-Meteor.publish('teams', () => {
+Meteor.publish('teams.all', () => {
   return Teams.find({}, {fields: Teams.publicFields})
 })
 

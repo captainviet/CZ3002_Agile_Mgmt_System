@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating'
 import { Courses } from '../../../api/courses/courses'
+import { Permissions } from '../../../api/permissions/permissions'
 
 import './entry.html'
 
@@ -13,22 +14,29 @@ Template.tableEntry.helpers({
     const ctxData = Template.instance().data
     const isStudent = ctxData.for === 'student'
     const isCoordinator = ctxData.for === 'coordinator'
+    const isAdmin = ctxData.for === 'admin'
 
     counter = 1;
 
-    let ListOfCourseCoordinators = Courses.find().fetch();
-    let arrayOfCoordinators = ListOfCourseCoordinators[0].coordinators
+    let arrayOfCoordinators = []
+    Courses.find({}).map(function(course) {
+      return course.coordinators.map(function(courseCoordinators) {
+        if(!arrayOfCoordinators.includes(courseCoordinators)) {
+          arrayOfCoordinators.push(courseCoordinators)
+        }
+      })
+    })
 
-    const query = {}
+    console.log("arrayOfCoordinators ")
+    console.log(arrayOfCoordinators)
+
     if (isCoordinator) {
       console.log("isCoordinator")
-      query._id = ListOfCourseCoordinators[0].coordinators
-      console.log("Query is " + query._id)
       counter = 1;
       return Meteor.users.find({'_id':{ $in: arrayOfCoordinators}}).map(function(users) {
         user_name = users.name ? users.name : 'Not updated';
         user_phone = users.phone ? users.phone : 'Not updated';
-        user_completed = users.completed ? users.completed : 'Incomplete';
+        user_completed = users.profile.confirmed ? 'Completed' : 'Incomplete';
         user_role = 'Coordinator';
         return {
           user_email: users.emails[0].address,
@@ -39,12 +47,46 @@ Template.tableEntry.helpers({
           counter: counter++
         }
       });
-    } else if (isStudent) {
-      console.log("isStudent")
-      return Meteor.users.find({'_id':{ $nin: arrayOfCoordinators}}).map(function(users) {
+    }
+
+    // Get user id of Admins
+    arrayOfAdmin = Meteor.users.find({}).fetch().filter(function(users) {
+      return Roles.userIsInRole(users._id, Permissions.admin, Roles.GLOBAL_GROUP);
+    }).map(function(users) {
+      return users._id;
+    });
+    console.log("arrayOfAdmin ")
+    console.log(arrayOfAdmin)
+
+    if (isAdmin) {
+      console.log("isAdmin")
+      return Meteor.users.find({'_id':{ $in: arrayOfAdmin}}).map(function(users) {
         user_name = users.name ? users.name : 'Not updated';
         user_phone = users.phone ? users.phone : 'Not updated';
-        user_completed = users.completed ? users.completed : 'Incomplete';
+        user_completed = users.profile.confirmed ? 'Completed' : 'Incomplete';
+        user_role = 'Admin';
+        return {
+          user_email: users.emails[0].address,
+          user_name: user_name,
+          user_phone: user_phone,
+          user_completed: user_completed,
+          user_role: user_role,
+          counter: counter++
+        }
+      });
+    }
+
+    // Merge coordinators and admins
+    let arrayOfCoordinatorsAndAdmins = arrayOfCoordinators.concat(arrayOfAdmin)
+    console.log("arrayOfCoordinatorsAndAdmins ")
+    console.log(arrayOfCoordinatorsAndAdmins)
+
+    if (isStudent) {
+      console.log("isStudent")
+      return Meteor.users.find({'_id':{ $nin: arrayOfCoordinatorsAndAdmins}}).map(function(users) {
+        user_name = users.name ? users.name : 'Not updated';
+        user_phone = users.phone ? users.phone : 'Not updated';
+        user_completed = users.profile.confirmed ? 'Completed' : 'Incomplete';
         user_role = 'Student';
         return {
           user_email: users.emails[0].address,

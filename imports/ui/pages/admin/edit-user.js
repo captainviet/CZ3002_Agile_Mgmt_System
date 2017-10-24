@@ -13,7 +13,7 @@ Template.edituserList.onCreated(function () {
   this.state = new ReactiveDict()
   Meteor.subscribe('courses')
   Meteor.subscribe('groups')
-  Meteor.subscribe('teams')
+  Meteor.subscribe('teams.all')
 })
 
 const Registrar = {
@@ -55,8 +55,41 @@ Template.edituserList.helpers({
   userCreated() {
     const instance = Template.instance()
     console.log("Inside userCreated")
-    return instance.state.get('create-success')
+    return instance.state.get('create-success-message')
   },
+  displayCourses() {
+    return Courses.find({}).map(function(course) {
+      course_value = course.name ? course.name : '';
+      return {
+        course_name: course.name,
+        course_value: course_value
+      }
+    });
+  },
+  displayGroups() {
+    const instance = Template.instance()
+    courseId = instance.state.get('courseId')
+    console.log("Displaying Groups of Course Id " + courseId)
+    return Groups.find({'course':courseId}).map(function(group) {
+      group_value = group.name ? group.name : '';
+      return {
+        group_name: group.name,
+        group_value: group_value
+      }
+    });
+  },
+  displayTeams() {
+    const instance = Template.instance()
+    groupId = instance.state.get('groupId')
+    console.log("Displaying Teams of Group Id " + groupId)
+    return Teams.find({'group':groupId}).map(function(team) {
+      team_value = team.number ? team.number : '';
+      return {
+        team_name: team.number,
+        team_value: team_value
+      }
+    });
+  }
 })
 
 Template.edituserList.events({
@@ -78,6 +111,32 @@ Template.edituserList.events({
     const instance = Template.instance()
     instance.state.set('role', role)
     console.log("The user role in 'role' reactiveDict is " + instance.state.get('role', role))
+  },
+  'change .courses'(e) {
+    e.preventDefault()
+    const courses = $('.courses').val()
+    console.log("The selected course is now " + courses)
+    const queryCourseSelected = {
+      'name': courses
+    }
+    let courseOfUser = Courses.find(queryCourseSelected).fetch()
+    const courseId = courseOfUser[0]._id
+    console.log("courseId is " + courseId)
+    const instance = Template.instance()
+    instance.state.set('courseId', courseId)
+  },
+  'change #group'(e) {
+    e.preventDefault()
+    const group = $('#group').val()
+    console.log("The selected group is now " + group)
+    const queryGroupSelected = {
+      'name': group
+    }
+    let groupOfUser = Groups.find(queryGroupSelected).fetch()
+    const groupId = groupOfUser[0]._id
+    console.log("groupId is " + groupId)
+    const instance = Template.instance()
+    instance.state.set('groupId', groupId)
   },
   'click #cu-submit, submit #cu-form'(e) {
     e.preventDefault()
@@ -106,6 +165,7 @@ Template.edituserList.events({
       case 'admin':
         console.log("admin case")
         Registrar.admin(email, role)
+        break
       case 'coordinator':
         console.log("coordinator case")
         let courseOfUser = Courses.find(queryCoordinator).fetch()
@@ -126,7 +186,7 @@ Template.edituserList.events({
         break
     }
     const instance = Template.instance()
-    sucess = true
-    instance.state.set('create-success', sucess)
+    message = 'User has been created!'
+    instance.state.set('create-success-message', message)
   }
 })

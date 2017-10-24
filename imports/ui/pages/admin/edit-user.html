@@ -52,36 +52,39 @@
                   </div>
                   {{#if isTeamLeaderMember}}
                   <div class="form-group">
-                      <label class="control-label col-md-3">Course</label>
-                      <div class="col-md-9">
-                          <select class="form-control courses">
-                              <option value="CZ3002">CZ3002</option>
-                              <option value="CZ3003">CZ3003</option>
-                          </select>
-                          <span class="help-block">Select user's course.</span>
-                      </div>
+                    <label class="control-label col-md-3">Course</label>
+                    <div class="col-md-9">
+                      <select class="form-control courses">
+                        <option value=""></option>
+                        {{#each displayCourses}}
+                          <option value="{{course_value}}">{{course_name}}</option>
+                        {{/each}}
+                      </select>
+                      <span class="help-block">Select user's course.</span>
+                    </div>
                   </div>
                   <div class="form-group">
-                      <label class="control-label col-md-3">Group</label>
-                      <div class="col-md-9">
-                          <select class="form-control" id='group'>
-                              <option value="TSA1">TSA1</option>
-                              <option value="TSA2">TSA2</option>
-                              <option value="TSA3">TSA3</option>
-                          </select>
-                          <span class="help-block">Select user's group.</span>
-                      </div>
+                    <label class="control-label col-md-3">Group</label>
+                    <div class="col-md-9">
+                        <select class="form-control" id='group'>
+                            <option value=""></option>
+                            {{#each displayGroups}}
+                              <option value="{{group_value}}">{{group_name}}</option>
+                            {{/each}}
+                        </select>
+                        <span class="help-block">Select user's group.</span>
+                    </div>
                   </div>
                   <div class="form-group">
-                      <label class="control-label col-md-3">Team</label>
-                      <div class="col-md-9">
-                          <select class="form-control" id='team'>
-                              <option value="1">Barcelona</option>
-                              <option value="2">Manchester United</option>
-                              <option value="3">PSG</option>
-                          </select>
-                          <span class="help-block">Select user's team.</span>
-                      </div>
+                    <label class="control-label col-md-3">Team</label>
+                    <div class="col-md-9">
+                        <select class="form-control" id='team'>
+                          {{#each displayTeams}}
+                            <option value="{{team_value}}">{{team_name}}</option>
+                          {{/each}}
+                        </select>
+                        <span class="help-block">Select user's team.</span>
+                    </div>
                   </div>
                   {{/if}}
                   {{#if isCoordinator}}
@@ -89,8 +92,10 @@
                       <label class="control-label col-md-3">Course</label>
                       <div class="col-md-9">
                           <select class="form-control courses">
-                              <option value="CZ3002">CZ3002</option>
-                              <option value="CZ3003">CZ3003</option>
+                            <option value=""></option>
+                            {{#each displayCourses}}
+                              <option value="{{course_value}}">{{course_name}}</option>
+                            {{/each}}
                           </select>
                           <span class="help-block">Select user's course.</span>
                       </div>
@@ -105,10 +110,10 @@
                           <button type="button" class="btn default">Cancel</button>
                       </div>
                   </div>
-                  {{#if userCreated}}
-                  <div class="alert alert-success">
-                    <strong>Success!</strong> User has been created! </div>
-                  {{/if}}
+                  <div class="alert alert-success {{#unless userCreated}}display-hide{{/unless}}">
+                    <strong>Success!</strong>
+                    {{ userCreated }}
+                  </div>
               </div>
           </form>
           <!-- END FORM-->
