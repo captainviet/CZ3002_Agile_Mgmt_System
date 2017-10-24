@@ -110,10 +110,11 @@
                           <button type="button" class="btn default">Cancel</button>
                       </div>
                   </div>
-                  <div class="alert alert-success {{#unless userCreated}}display-hide{{/unless}}">
-                    <strong>Success!</strong>
-                    {{ userCreated }}
+                  {{#if userCreated}}
+                  <div>
+                    {{ userCreatedModal }}
                   </div>
+                  {{/if}}
               </div>
           </form>
           <!-- END FORM-->

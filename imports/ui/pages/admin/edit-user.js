@@ -57,6 +57,9 @@ Template.edituserList.helpers({
     console.log("Inside userCreated")
     return instance.state.get('create-success-message')
   },
+  userCreatedModal() {
+    swal("Done!", "User has been created!", "success");
+  },
   displayCourses() {
     return Courses.find({}).map(function(course) {
       course_value = course.name ? course.name : '';

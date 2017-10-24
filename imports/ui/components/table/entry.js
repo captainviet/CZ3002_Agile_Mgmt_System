@@ -3,6 +3,7 @@ import { Courses } from '../../../api/courses/courses'
 import { Permissions } from '../../../api/permissions/permissions'
 
 import './entry.html'
+import swal from 'sweetalert';
 
 Template.tableEntry.onCreated(() => {
   Meteor.subscribe('users')
@@ -98,13 +99,32 @@ Template.tableEntry.helpers({
         }
       });
     }
-  },
+  }
 })
 
 Template.tableEntry.events({
   'click .del': function(event) {
     event.preventDefault()
-    let userId = Meteor.users.findOne({'emails.0.address':this.user_email});
-    Meteor.call('users.delete', userId._id)
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this user!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        console.log(willDelete)
+        let userId = Meteor.users.findOne({'emails.0.address':this.user_email});
+        userEmail = this.user_email;
+        Meteor.call('users.delete', userId._id)
+        swal("Done! " + userEmail + " has been deleted!", {
+          icon: "success",
+        });
+      } else {
+        console.log(willDelete)
+        swal("User is safe!");
+      }
+    });
   }
 })
