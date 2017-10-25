@@ -1,5 +1,8 @@
 import { Tasks } from '../../../api/tasks/tasks'
 import { Links } from '../../../api/links/links'
+// import { sms } from '../../../api/twilio/twilio'
+// import { SMS } from '../../../api/tasks/server/twillio'
+// import * as Twilio from 'twilio';
 
 
 import './team-task.html'
@@ -8,26 +11,59 @@ import '../../stylesheets/team-task.css'
 var isInitial = true
 
 Tasks.find().observeChanges({
+
    added: function (id, fields) {
        if(!isInitial){
+    
         console.log(fields.text)
         console.log(id)
        console.log("task added lol")
        sendemailto = Tasks.findOne(id).assignee
        taskheader = Tasks.findOne(id).text
-       console.log(sendemailto)
+       console.log(sendemailto + 'sendemailto')
        const useremail = Meteor.users.findOne(sendemailto)
        emailadd = useremail.emails[0].address
+       phonenumber = useremail.emails[0].phone
        console.log(emailadd + ' emailadd')
-       Email.send("teamvoltase@gmail.com",
-        // emailadd,
-        'r302103@mvrht.net',
-        "Volt: A new task has been assigned to you",
-        "Task: " + taskheader + " has been assigned to you",
-        // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
-        "smtp.gmail.com",
-           "teamvoltase@gmail.com",
-           "teamvolt!");
+       console.log(phonenumber + ' lol')
+       var smsOptions =  {
+          to: phonenumber,
+          message: taskheader
+        };
+       Meteor.call('sendSMS', smsOptions, function (err, result) {
+      // handle any errors returned by the server by informing the user of
+      // the error and logging out any information that may be helpful in 
+      // diagnosing the issue and then returning. the return in the if block
+      // prevents the need for an else block to protect to following code.
+      if (err) {
+        alert("There was an error sending the message. See the console for more info");
+        console.warn("There was an error sending the message.", smsOptions, err);
+        return;
+      }else{
+              // inform the user that the message was sent correctly.
+      alert("Message sent successfully. See the console for more info.");
+      // log out the db object that was created.
+      console.log("Message sent. Result: ", result);
+      }
+
+    });
+       // twilioClient.sendSms({
+       //      to:   phonenumber,
+       //      from: '+15593994160',
+       //      body: 'the twilio send was successful!!'
+       //  },function(err, data) {
+       //    console.log(err, data);
+       //  });
+       // console.log(user + ' lol')
+       // Email.send("teamvoltase@gmail.com",
+       //  // emailadd,
+       //  'r302103@mvrht.net',
+       //  "Volt: A new task has been assigned to you",
+       //  "Task: " + taskheader + " has been assigned to you",
+       //  // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
+       //  "smtp.gmail.com",
+       //     "teamvoltase@gmail.com",
+       //     "teamvolt!");
         console.log("sent email yo")
         }
     console.log('nonono you are not new!')
@@ -74,7 +110,7 @@ Meteor.startup(() => {
       console.log(Meteor.users.find().fetch())
       const opts = thisTeam.members.map((userId) => {
         const user = Meteor.users.findOne(userId)
-        console.log(user)
+        console.log(user + ' user :)')
         const label = user.name ? user.name : user.emails[0].address
         return {
           key: userId,
@@ -181,6 +217,10 @@ Template.teamTask.onRendered(function () {
   gantt.attachEvent('onTaskCreated', (task) => {
     // block create task api for team member
     console.log("inside on taskcreated")
+    // console.log(process.env.TWILIO_NUMBER);
+    // delete process.env.TWILIO_ACCOUNT_SID;
+    // delete process.env.TWILIO_AUTH_TOKEN;
+    // delete process.env.TWILIO_NUMBER;
     isInitial = false
     return true
   })
