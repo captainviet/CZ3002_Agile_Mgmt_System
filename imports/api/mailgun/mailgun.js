@@ -1,13 +1,9 @@
 import { Random } from 'meteor/random'
 import { check } from 'meteor/check'
 import { Permissions } from '../permissions/permissions'
+import { MailgunCredentials } from './mailgun-credentials'
 
-const API_KEY = 'api:key-63a72c60f684bf68fa984654d2c0f09d'
-const URL = 'https://api.mailgun.net/v3/'
-const DOMAIN = 'sandboxff6511ffc2fd4416b885d7f404de131a.mailgun.org'
-const FROM = 'Agile Management System (SCSE) <noreply@scse.ams.com>'
-
-const post_url = URL + DOMAIN + '/messages'
+const post_url = MailgunCredentials.url + MailgunCredentials.domain + '/messages'
 
 const Registrar = {
   student: (userId, teamId) => {
@@ -28,15 +24,15 @@ Meteor.methods({
     console.log(email)
     console.log(password)
     const opts = {
-      auth: API_KEY,
+      auth: MailgunCredentials.api,
       params: {
-        from: FROM,
+        from: MailgunCredentials.from,
         to: email,
         subject: 'Welcome to Agile Management System (SCSE)',
-        html: 'Hello ' + email + ',\nYour have been allocated an account on AMS (SCSE). Your password is ' + password + '.\nPlease change it within the next 7 days, otherwise your account will be deactivated.'
+        html: 'Hello ' + email + ',<br />Your have been allocated an account on AMS (SCSE). Your password is ' + password + '.<br />Please change it within the next 7 days, otherwise your account will be deactivated.'
       }
     }
-    Meteor.http.post(post_url, opts, function(err) {
+    Meteor.http.post(post_url, opts, function (err) {
       if (err) {
         console.log(err.reason)
         throw new Meteor.Error(err)

@@ -2,113 +2,37 @@ import { Tasks } from '../../../api/tasks/tasks'
 import { Links } from '../../../api/links/links'
 import { Teams } from '../../../api/teams/teams'
 
-
 import './team-task.html'
 import '../../stylesheets/gantt.css'
 import '../../stylesheets/team-task.css'
-var isInitial = true
+
+let isInitial = true
 
 Tasks.find().observeChanges({
   added: function (id, fields) {
     if (!isInitial) {
-
-      console.log(fields.text)
-      console.log(id)
-      console.log("task added lol")
-      sendemailto = Tasks.findOne(id).assignee
-      taskheader = Tasks.findOne(id).text
-      console.log(sendemailto + 'sendemailto')
-      const useremail = Meteor.users.findOne(sendemailto)
-      emailadd = useremail.emails[0].address
-      phonenumber = useremail.emails[0].phone
-      console.log(emailadd + ' emailadd')
-      console.log(phonenumber + ' lol')
-      var smsOptions = {
-        to: phonenumber,
-        message: taskheader
-      };
-      Email.send("teamvoltase@gmail.com",
-        // emailadd,
-        emailadd,
-        "Volt: A new task has been assigned to you",
-        "Task: " + taskheader + " has been assigned to you",
-        // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
-        "smtp.gmail.com",
-        "teamvoltase@gmail.com",
-        "teamvolt!");
-      console.log("sent email yo")
-      Meteor.call('sendSMS', smsOptions, function (err, result) {
-        // handle any errors returned by the server by informing the user of
-        // the error and logging out any information that may be helpful in 
-        // diagnosing the issue and then returning. the return in the if block
-        // prevents the need for an else block to protect to following code.
-        if (err) {
-          alert("There was an error sending the message. See the console for more info");
-          console.warn("There was an error sending the message.", smsOptions, err);
-          return;
-        } else {
-          // inform the user that the message was sent correctly.
-          alert("Message sent successfully. See the console for more info.");
-          // log out the db object that was created.
-          console.log("Message sent. Result: ", result);
-        }
-
-      });
-      // twilioClient.sendSms({
-      //      to:   phonenumber,
-      //      from: '+15593994160',
-      //      body: 'the twilio send was successful!!'
-      //  },function(err, data) {
-      //    console.log(err, data);
-      //  });
-      // console.log(user + ' lol')
-      // Email.send("teamvoltase@gmail.com",
-      //  // emailadd,
-      //  'r302103@mvrht.net',
-      //  "Volt: A new task has been assigned to you",
-      //  "Task: " + taskheader + " has been assigned to you",
-      //  // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
-      //  "smtp.gmail.com",
-      //     "teamvoltase@gmail.com",
-      //     "teamvolt!");
-      console.log("sent email yo")
+      console.log('Notifying new task...')
+      setTimeout(() => {
+        Meteor.call('notifications.newTask', fields)
+      }, 0)
     }
   },
   changed: function (id, fields) {
-    console.log("task changed lol")
-    console.log(id + ' id')
-    sendemailto = Tasks.findOne(id).assignee
-    console.log(sendemailto)
-    taskheader = Tasks.findOne(id).text
-    console.log(fields.progress + ' fields text')
-    if (fields.progress == 1) {
-      console.log("progress==1")
-      console.log(sendemailto)
-      const useremail = Meteor.users.findOne(sendemailto)
-      console.log(useremail + ' useremail')
-      emailadd = useremail.emails[0].address
-      console.log(emailadd)
-      const team = Teams.findOne({
-        $elemMatch: {
-          members: emailadd
-        }
-      })
-      const teamMails = team.members.map((userId) => {
-        return Meteor.users.findOne(userId).emails[0].address
-      })
-      Email.send("teamvoltase@gmail.com",
-        // emailadd,
-        teamMails,
-        "Volt: Task has been completed, Review Needed",
-        "Task: " + taskheader + " has been marked completed. Please review.",
-        // {token: "b23e1e99-06e6-41cf-95ee-67ab05f74861"});
-        "smtp.gmail.com",
-        "teamvoltase@gmail.com",
-        "teamvolt!");
-
+    const task = Tasks.findOne(id)
+    switch (fields.progress) {
+      case 1:
+        console.log('Notifying completed task...')
+        setTimeout(() => {
+          Meteor.call('notifications.completedTask', task)
+        }, 0)
+        break
+      case 2:
+        console.log('Notifying reviewed task...')
+        setTimeout(() => {
+          Meteor.call('notifications.reviewedTask', task)
+        }, 0)
+        break
     }
-    // console.log(sendemailto)
-    const useremail = Meteor.users.findOne(sendemailto)
   },
   removed: function (id) {
     console.log("task removed lol")
@@ -116,57 +40,57 @@ Tasks.find().observeChanges({
 });
 
 Meteor.startup(() => {
-  Tracker.autorun(() => {
-    const thisTeam = Session.get('this-team')
-    Meteor.subscribe('users', () => {
+  Meteor.subscribe('teams')
+})
 
-      console.log(Meteor.users.find().fetch())
-      const opts = thisTeam.members.map((userId) => {
-        const user = Meteor.users.findOne(userId)
-        console.log(user + ' user :)')
-        const label = user.name ? user.name : user.emails[0].address
+Template.teamTask.onCreated(function () {
+  Meteor.subscribe('tasks')
+  Meteor.subscribe('links')
+  Meteor.subscribe('users', () => {
+    const thisTeam = Teams.findOne()
+    console.log(thisTeam)
+    const opts = thisTeam.members.map((userId) => {
+      const user = Meteor.users.findOne(userId)
+      if (!user) {
         return {
           key: userId,
-          label
+          label: 'Unknown'
         }
-      })
-      console.log(opts)
-      gantt.config.lightbox.sections = [
-        {
-          name: "description",
-          height: 38,
-          map_to: "text",
-          type: "textarea",
-          focus: true
-        }, {
-          name: "priority",
-          height: 22,
-          map_to: "assignee",
-          type: "select",
-          options: opts
-        }, {
-          name: "time",
-          height: 72,
-          type: "duration",
-          map_to: "auto"
-        }
-      ];
+      }
+      const label = user.profile.name ? user.profile.name : user.emails[0].address
+      return {
+        key: userId,
+        label
+      }
     })
-
-    Meteor.subscribe('tasks', () => {
-      console.log(Tasks.find().fetch())
-      // isInitial = false
-    })
-    Meteor.subscribe('teams.all')
-
-    Meteor.subscribe('links')
-
+    console.log(opts)
+    gantt.config.lightbox.sections = [
+      {
+        name: "description",
+        height: 38,
+        map_to: "text",
+        type: "textarea",
+        focus: true
+      }, {
+        name: "priority",
+        height: 22,
+        map_to: "assignee",
+        type: "select",
+        options: opts
+      }, {
+        name: "time",
+        height: 72,
+        type: "duration",
+        map_to: "auto"
+      }
+    ];
   })
+
 
 })
 
+
 Template.teamTask.onRendered(function () {
-  const thisTeam = Session.get('this-team')
   const daysStyle = function (date) {
     const dateToStr = gantt.date.date_to_str("%D");
     if (dateToStr(date) == "Sun" || dateToStr(date) == "Sat") {
@@ -248,6 +172,8 @@ Template.teamTask.onRendered(function () {
       return false
     }
     if (!task.team) {
+      const thisTeam = Teams.findOne()
+      console.log(thisTeam)
       task.team = thisTeam._id
     }
     if (!task.progress) {
@@ -289,4 +215,3 @@ Template.teamTask.events({
     gantt.render()
   }
 })
-

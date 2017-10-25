@@ -4,10 +4,7 @@ import { Teams, MyCourses, MyGroups } from '../../../../api/teams/teams'
 import './course-nav.html'
 
 Template.courseNav.onCreated(() => {
-  Meteor.subscribe('teams', () => {
-    Session.setPersistent('this-team', Teams.findOne())
-    console.log(Session.get('this-team'))
-  })
+  Meteor.subscribe('teams')
 })
 
 Template.courseNav.helpers({
@@ -23,7 +20,5 @@ Template.courseNav.helpers({
       }
     })
   },
-  isLastTeam(teamId) {
-    return teamId === Session.get('this-team')._id ? "selected" : ""
-  }
+
 })
