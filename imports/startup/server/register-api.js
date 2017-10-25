@@ -5,10 +5,9 @@
 
 import '../../api/users'
 import '../../api/tasks'
-import '../../api/notifications'
 import '../../api/courses'
 import '../../api/groups'
 import '../../api/teams'
 import '../../api/links'
 import '../../api/mailgun'
-import '../../api/twilio/twilio'
+import '../../api/notification'

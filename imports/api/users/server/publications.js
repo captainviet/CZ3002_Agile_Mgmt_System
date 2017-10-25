@@ -49,6 +49,7 @@ Meteor.methods({
   'users.updatePersonalInfo'(userId, name, phone) {
     check(name, String)
     check(phone, String)
+    phone = '+65' + phone
     const query = {
       _id: userId
     }
