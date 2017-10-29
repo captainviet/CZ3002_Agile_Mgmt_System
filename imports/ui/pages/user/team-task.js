@@ -160,7 +160,14 @@ Template.teamTask.onRendered(function () {
     // delete process.env.TWILIO_AUTH_TOKEN;
     // delete process.env.TWILIO_NUMBER;
     isInitial = false
+    const thisTeam = Teams.findOne()
+    if (!Roles.userIsInRole(Meteor.userId(), 'tasks.create', thisTeam._id)) {
+      return false
+    }
     return true
+  })
+  gantt.attachEvent('onBeforeLightbox', (id) => {
+    return !Tasks.findOne({ id }) || Roles.userIsInRole(Meteor.userId(), 'tasks.create') || Tasks.findOne({ id }).assignee === Meteor.userId()
   })
   gantt.attachEvent('onBeforeTaskAdd', (id, task) => {
     console.log("inside onBeforeTaskAdd")

@@ -39,11 +39,6 @@ Meteor.startup(() => {
       coordinators: [
         coorId
       ]
-    }, {
-      name: 'CZ3003',
-      coordinators: [
-        coorId
-      ]
     }]
     courses.forEach((record) => {
       Courses.insert(record)
@@ -53,7 +48,6 @@ Meteor.startup(() => {
   // initialize Groups
   if (typeof Groups.findOne() === 'undefined') {
     const courseId = Courses.findOne({ name: 'CZ3002' })._id
-    const courseId1 = Courses.findOne({ name: 'CZ3003' })._id
     const groups = [{
       name: 'TSA1',
       course: courseId,
@@ -62,14 +56,6 @@ Meteor.startup(() => {
       name: 'TSA2',
       course: courseId,
       startDate: new Date('October 13, 2017')
-    }, {
-      name: 'SSAP1',
-      course: courseId1,
-      startDate: new Date('October 13, 2017')
-    }, {
-      name: 'SSAP2',
-      course: courseId1,
-      startDate: new Date('October 13, 2017')
     }]
     groups.forEach((record) => {
       Groups.insert(record)
@@ -77,30 +63,21 @@ Meteor.startup(() => {
   }
 
   // initialize Teams
+  const desmondId = Meteor.users.findOne({ 'emails.0.address': 'desmond@gmail.com' })._id
+  const joelId = Meteor.users.findOne({ 'emails.0.address': 'joel@gmail.com' })._id
+  const brandonId = Meteor.users.findOne({ 'emails.0.address': 'brandon@gmail.com' })._id
+  const jeffId = Meteor.users.findOne({ 'emails.0.address': 'jeff@gmail.com' })._id
+  const cjId = Meteor.users.findOne({ 'emails.0.address': 'cj@gmail.com' })._id
+  const courseId = Courses.findOne({ name: 'CZ3002' })._id
+  const groupId = Groups.findOne({
+    name: 'TSA1',
+    course: courseId
+  })._id
+  const groupId1 = Groups.findOne({
+    name: 'TSA2',
+    course: courseId
+  })._id
   if (typeof Teams.findOne() === 'undefined') {
-    const desmondId = Meteor.users.findOne({ 'emails.0.address': 'desmond@gmail.com' })._id
-    const joelId = Meteor.users.findOne({ 'emails.0.address': 'joel@gmail.com' })._id
-    const brandonId = Meteor.users.findOne({ 'emails.0.address': 'brandon@gmail.com' })._id
-    const jeffId = Meteor.users.findOne({ 'emails.0.address': 'jeff@gmail.com' })._id
-    const cjId = Meteor.users.findOne({ 'emails.0.address': 'cj@gmail.com' })._id
-    const courseId = Courses.findOne({ name: 'CZ3002' })._id
-    const courseId1 = Courses.findOne({ name: 'CZ3003' })._id
-    const groupId = Groups.findOne({
-      name: 'TSA1',
-      course: courseId
-    })._id
-    const groupId1 = Groups.findOne({
-      name: 'TSA2',
-      course: courseId
-    })._id
-    const groupId2 = Groups.findOne({
-      name: 'SSAP1',
-      course: courseId1
-    })._id
-    const groupId3 = Groups.findOne({
-      name: 'SSAP2',
-      course: courseId1
-    })._id
     const teams = [{
       number: 1,
       members: [
@@ -126,34 +103,31 @@ Meteor.startup(() => {
         cjId
       ],
       group: groupId1
-    }, {
-      number: 100,
-      members: [
-        cjId
-      ],
-      group: groupId2
-    }, {
-      number: 101,
-      members: [
-        jeffId,
-        desmondId
-      ],
-      group: groupId2
-    }, {
-      number: 102,
-      members: [
-        brandonId
-      ],
-      group: groupId3
-    }, {
-      number: 103,
-      members: [
-        joelId
-      ],
-      group: groupId3
     }]
     teams.forEach((record) => {
       Teams.insert(record)
     })
   }
+  const team1 = Teams.findOne({
+    number: 1,
+    group: groupId
+  })
+  console.log(team1)
+  Roles.addUsersToRoles(desmondId, Permissions.teamLeader, team1._id)
+  Roles.addUsersToRoles(joelId, Permissions.teamMember, team1._id)
+  const team2 = Teams.findOne({
+    number: 2,
+    group: groupId
+  })
+  Roles.addUsersToRoles(brandonId, Permissions.teamLeader, team2._id)
+  const team3 = Teams.findOne({
+    number: 10,
+    group: groupId1
+  })
+  Roles.addUsersToRoles(jeffId, Permissions.teamLeader, team3._id)
+  const team4 = Teams.findOne({
+    number: 11,
+    group: groupId1
+  })
+  Roles.addUsersToRoles(cjId, Permissions.teamLeader, team4._id)
 })
